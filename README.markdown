@@ -1,6 +1,6 @@
 # git_dump
 
-Distributed versioned dump using git.
+Distributed versioned store using git.
 
 ## Installation
 

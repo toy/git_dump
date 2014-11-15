@@ -3,7 +3,7 @@
 Gem::Specification.new do |s|
   s.name        = 'git_dump'
   s.version     = '0.0.0'
-  s.summary     = %q{Distributed versioned dump using git}
+  s.summary     = %q{Distributed versioned store using git}
   s.homepage    = "http://github.com/toy/#{s.name}"
   s.authors     = ['Ivan Kuchin']
   s.license     = 'MIT'
