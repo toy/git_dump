@@ -10,3 +10,5 @@ Makefile
 *.o
 *.bundle
 /tmp/
+
+/Gemfile.lock
