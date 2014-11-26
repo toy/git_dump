@@ -41,6 +41,15 @@ class GitDump
       end
     end
 
+    # Receive version with id from repo at url
+    # Use :progress => true to show progress
+    def fetch(url, id, options = {})
+      ref = "refs/tags/#{id}"
+      args = %W[fetch --no-tags #{url} #{ref}:#{ref}]
+      args << '--quiet' unless options[:progress]
+      git(*args).run
+    end
+
     def data_sha(content)
       @data_sha_command ||= git(*%w[hash-object -w --no-filters --stdin])
       @data_sha_command.popen('r+') do |f|

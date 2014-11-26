@@ -79,6 +79,15 @@ class GitDump
       @repo, @id, @sha = repo, id, sha
     end
 
+    # Send this version to repo at url
+    # Use :progress => true to show progress
+    def push(url, options = {})
+      ref = "refs/tags/#{id}"
+      args = %W[push --no-tags #{url} #{ref}:#{ref}]
+      args << '--quiet' unless options[:progress]
+      repo.git(*args).run
+    end
+
     def inspect
       "#<#{self.class} id=#{@id} sha=#{@sha} tree=#{@tree.inspect}>"
     end

@@ -162,5 +162,39 @@ describe GitDump do
         expect(version['c/c'].each.map(&:path)).to eq(%w[c/c/c])
       end
     end
+
+    describe :exchange do
+      let(:other_dump) do
+        GitDump.new File.join(tmp_dir, 'other'), :create => true
+      end
+
+      let(:built) do
+        builder = dump.new_version
+        builder['a'] = 'b'
+        builder.commit
+      end
+
+      def check_received_version
+        expect(other_dump.versions.length).to eq(1)
+
+        version = other_dump.versions.first
+        expect(version.id).to eq(built.id)
+        expect(version.each_recursive.map do |entry|
+          [entry.path, entry.read]
+        end).to eq([%w[a b]])
+      end
+
+      it 'pushes version' do
+        built.push(other_dump.git_dir)
+
+        check_received_version
+      end
+
+      it 'fetches version' do
+        other_dump.fetch(dump.git_dir, built.id)
+
+        check_received_version
+      end
+    end
   end
 end
