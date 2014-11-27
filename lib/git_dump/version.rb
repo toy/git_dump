@@ -52,6 +52,7 @@ class GitDump
           cleanup_ref_component(component)
         end.join('/')
         repo.git('tag', tag_name, sha).run
+        repo.gc(:auto => true)
         Version.new(repo, tag_name, sha)
       end
 
