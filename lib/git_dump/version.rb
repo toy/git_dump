@@ -88,6 +88,11 @@ class GitDump
       repo.git(*args).run
     end
 
+    # Remove this version
+    def remove
+      repo.git(*%W[tag --delete #{id}], :no_stdout => true).run
+    end
+
     def inspect
       "#<#{self.class} id=#{@id} sha=#{@sha} tree=#{@tree.inspect}>"
     end
