@@ -3,6 +3,27 @@ require 'git_dump'
 require 'tmpdir'
 
 describe GitDump do
+  def with_env(hash)
+    saved = Hash[hash.map{ |key, _| [key, ENV[key]] }]
+    begin
+      hash.each{ |key, value| ENV[key] = value }
+      yield
+    ensure
+      saved.each{ |key, value| ENV[key] = value }
+    end
+  end
+
+  ADD_ENV = {
+    'GIT_AUTHOR_NAME' => 'rspec',
+    'GIT_AUTHOR_EMAIL' => 'rspec@test',
+    'GIT_COMMITTER_NAME' => 'rspec',
+    'GIT_COMMITTER_EMAIL' => 'rspec@test',
+  }
+
+  around do |example|
+    with_env(ADD_ENV, &example)
+  end
+
   describe :new do
     let(:tmp_dir){ Dir.mktmpdir }
     let(:path){ File.join(tmp_dir, 'dump') }
