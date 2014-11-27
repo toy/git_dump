@@ -50,6 +50,16 @@ class GitDump
       git(*args).run
     end
 
+    # Run garbage collection
+    # Use :auto => true to run only if GC is required
+    # Use :aggressive => true to run GC more aggressively
+    def gc(options = {})
+      args = %w[gc --quiet]
+      args << '--auto' if options[:auto]
+      args << '--aggressive' if options[:aggressive]
+      git(*args).run
+    end
+
     def data_sha(content)
       @data_sha_command ||= git(*%w[hash-object -w --no-filters --stdin])
       @data_sha_command.popen('r+') do |f|
