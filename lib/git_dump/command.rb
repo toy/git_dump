@@ -12,6 +12,7 @@ class GitDump
     end
 
     attr_reader :args
+    attr_reader :env
     attr_reader :chdir
     attr_reader :no_stdout
     attr_reader :no_stderr
@@ -23,6 +24,7 @@ class GitDump
 
       return unless options
 
+      @env = options.delete(:env).to_hash if options.key?(:env)
       @chdir = options.delete(:chdir).to_s if options.key?(:chdir)
       @no_stdout = !!options.delete(:no_stdout) if options.key?(:no_stdout)
       @no_stderr = !!options.delete(:no_stderr) if options.key?(:no_stderr)
@@ -33,6 +35,10 @@ class GitDump
     # Construct command string
     def to_s
       cmd = args.shelljoin
+      if env
+        env_str = env.map{ |k, v| "#{k}=#{v}" }.shelljoin
+        cmd = "#{env_str} #{cmd}"
+      end
       cmd = "cd #{chdir}; #{cmd}" if chdir
       cmd << ' > /dev/null' if no_stdout
       cmd << ' 2> /dev/null' if no_stderr
@@ -81,7 +87,7 @@ class GitDump
         options[:chdir] = chdir if chdir
         options[:out] = '/dev/null' if no_stdout
         options[:err] = '/dev/null' if no_stderr
-        args + [options]
+        [env || {}] + args + [options]
       end
     end
   end
