@@ -3,12 +3,13 @@ class GitDump
   class Tree
     # Common methods in Tree and Builder
     module Base
-      # Access entry or tree at path
+      # Retrive tree or entry at path, return nil if there is nothing at path
       def [](path)
         get_at(parse_path(path))
       end
 
-      # Iterate entries/trees at one level, return enumerator if no block given
+      # Iterate over every tree/entry of this tree, return enumerator if no
+      # block given
       def each(&block)
         return to_enum(:each) unless block
         @entries.each do |_, entry|
@@ -16,7 +17,8 @@ class GitDump
         end
       end
 
-      # Iterate every entry recursively, return enumerator if no block given
+      # Iterate over all entries recursively, return enumerator if no block
+      # given
       def each_recursive(&block)
         return to_enum(:each_recursive) unless block
         @entries.each do |_, entry|
