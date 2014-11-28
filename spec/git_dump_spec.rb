@@ -24,6 +24,11 @@ describe GitDump do
     with_env(ADD_ENV, &example)
   end
 
+  DATAS = {
+    :text => "\r\n\r\nline\nline\rline\r\nline\n\rline\r\n\r\n",
+    :binary => 256.times.sort_by{ rand }.pack('C*'),
+  }
+
   describe :new do
     let(:tmp_dir){ Dir.mktmpdir }
     let(:path){ File.join(tmp_dir, 'dump') }
@@ -123,16 +128,13 @@ describe GitDump do
       expect(builder['a/a'].read).to eq('hello')
     end
 
-    it 'does not change text and binary data' do
-      text = "\r\n\r\nline\nline\rline\r\nline\n\rline\r\n\r\n"
-      data = 256.times.sort_by{ rand }.pack('C*')
+    DATAS.each do |type, data|
+      it "does not change #{type} data" do
+        builder = dump.new_version
+        builder['a'] = data
 
-      builder = dump.new_version
-      builder['a'] = text
-      builder['b'] = data
-
-      expect(builder['a'].read).to eq(text)
-      expect(builder['b'].read).to eq(data)
+        expect(builder['a'].read).to eq(data)
+      end
     end
 
     describe :traversing do
