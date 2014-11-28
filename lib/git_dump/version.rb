@@ -41,8 +41,10 @@ class GitDump
       # Create commit and tag it, returns Version instance
       # Options:
       #   :time - set version time (tag and commit)
+      #   :tags - list of strings to associate with this version
       def commit(options = {})
         time = options[:time] || Time.now
+        tags = Array(options[:tags]).join(',')
 
         time_s = time.strftime('%s %z')
         env = {
@@ -59,9 +61,10 @@ class GitDump
           time.utc.strftime('%Y-%m-%d_%H-%M-%S'),
           GitDump.hostname,
           GitDump.uuid,
+          tags,
         ].map do |component|
           cleanup_ref_component(component)
-        end.join('/')
+        end.reject(&:empty?).join('/')
         repo.git('tag', tag_name, sha, :env => env).run
         repo.gc(:auto => true)
         Version.new(repo, tag_name, sha)
