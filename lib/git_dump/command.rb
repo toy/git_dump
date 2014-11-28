@@ -23,9 +23,9 @@ class GitDump
 
       return unless options
 
-      @chdir = options.delete(:chdir)
-      @no_stdout = options.delete(:no_stdout)
-      @no_stderr = options.delete(:no_stderr)
+      @chdir = options.delete(:chdir).to_s if options.key?(:chdir)
+      @no_stdout = !!options.delete(:no_stdout) if options.key?(:no_stdout)
+      @no_stderr = !!options.delete(:no_stderr) if options.key?(:no_stderr)
 
       fail "Unknown options: #{options.inspect}" unless options.empty?
     end
