@@ -32,13 +32,15 @@ class GitDump
         @tree = Tree::Builder.new(repo, nil)
       end
 
-      def add(path, content, mode = 0644)
-        add_sha(path, repo.data_sha(content), mode)
+      # Store data `content` with mode `mode` at `path`
+      def store(path, content, mode = 0644)
+        tree.store(path, content, mode)
       end
-      alias_method :[]=, :add
+      alias_method :[]=, :store
 
-      def add_file(path, from, mode = nil)
-        add_sha(path, repo.path_sha(from), mode || File.stat(from).mode)
+      # Store data from `from` with mode `mode` (by default file mode) at `path`
+      def store_from(path, from, mode = nil)
+        tree.store_from(path, from, mode)
       end
 
       # Create commit and tag it, returns Version instance
@@ -80,10 +82,6 @@ class GitDump
     private
 
       attr_reader :tree
-
-      def add_sha(path, sha, mode)
-        tree[path] = Entry.new(repo, path, sha, mode)
-      end
 
       def cleanup_ref_component(component)
         component.gsub(/[^a-zA-Z0-9\-_,]+/, '_')

@@ -89,9 +89,9 @@ describe GitDump do
     it 'creates and reads version' do
       builder = dump.new_version
       builder['string/x'] = 'test a'
-      builder.add('stringio/x', StringIO.new('test b'), 0644)
-      builder.add('io/x', File.open(__FILE__), 0755)
-      builder.add_file('path/x', __FILE__)
+      builder.store('stringio/x', StringIO.new('test b'), 0644)
+      builder.store('io/x', File.open(__FILE__), 0755)
+      builder.store_from('path/x', __FILE__)
       built = builder.commit
 
       reinit_dump = GitDump.new(dump.git_dir)
@@ -202,7 +202,7 @@ describe GitDump do
       [0644, 0755].each do |mode|
         it "sets mode to #{mode.to_s(8)}" do
           builder = dump.new_version
-          builder.add('a', 'test', mode)
+          builder.store('a', 'test', mode)
 
           path = File.join(tmp_dir, 'file')
           builder['a'].write_to(path)

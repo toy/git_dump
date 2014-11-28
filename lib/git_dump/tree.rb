@@ -59,8 +59,16 @@ class GitDump
         @entries = {}
       end
 
-      def []=(path, object)
-        put_at(parse_path(path), object)
+      # Store data `content` with mode `mode` at `path`
+      def store(path, content, mode = 0644)
+        put_at(parse_path(path), repo.data_sha(content), mode)
+      end
+      alias_method :[]=, :store
+
+      # Store data from `from` with mode `mode` (by default file mode) at `path`
+      def store_from(path, from, mode = nil)
+        mode ||= File.stat(from).mode
+        put_at(parse_path(path), repo.path_sha(from), mode)
       end
 
       def sha
@@ -80,16 +88,17 @@ class GitDump
 
     protected
 
-      def put_at(parts, object)
-        name = parts.first
-        if parts.length == 1
-          @entries[name] = object
+      def put_at(parts, sha, mode)
+        name = parts.shift
+        if parts.empty?
+          @entries[name] =
+            Entry.new(repo, path ? "#{path}/#{name}" : name, sha, mode)
         else
           unless @entries[name].is_a?(self.class)
             @entries[name] =
               self.class.new(repo, path ? "#{path}/#{name}" : name)
           end
-          @entries[name].put_at(parts.drop(1), object)
+          @entries[name].put_at(parts, sha, mode)
         end
       end
     end
