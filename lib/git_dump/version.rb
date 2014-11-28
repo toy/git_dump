@@ -38,20 +38,31 @@ class GitDump
         add_sha(path, repo.path_sha(from), mode || File.stat(from).mode)
       end
 
-      def commit
-        sha = repo.git('commit-tree', tree.sha).popen('r+') do |f|
+      # Create commit and tag it, returns Version instance
+      # Options:
+      #   :time - set version time (tag and commit)
+      def commit(options = {})
+        time = options[:time] || Time.now
+
+        time_s = time.strftime('%s %z')
+        env = {
+          'GIT_AUTHOR_DATE' => time_s,
+          'GIT_COMMITTER_DATE' => time_s,
+        }
+
+        sha = repo.git('commit-tree', tree.sha, :env => env).popen('r+') do |f|
           # f.puts description
           f.close_write
           f.read.chomp
         end
         tag_name = [
-          Time.now.utc.strftime('%Y-%m-%d_%H-%M-%S'),
+          time.utc.strftime('%Y-%m-%d_%H-%M-%S'),
           GitDump.hostname,
           GitDump.uuid,
         ].map do |component|
           cleanup_ref_component(component)
         end.join('/')
-        repo.git('tag', tag_name, sha).run
+        repo.git('tag', tag_name, sha, :env => env).run
         repo.gc(:auto => true)
         Version.new(repo, tag_name, sha)
       end
