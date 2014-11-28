@@ -186,6 +186,32 @@ describe GitDump do
       end
     end
 
+    describe :write_to do
+      DATAS.each do |type, data|
+        it "writes back #{type} data" do
+          builder = dump.new_version
+          builder['a'] = data
+
+          path = File.join(tmp_dir, 'file')
+          builder['a'].write_to(path)
+
+          expect(File.open(path, 'rb', &:read)).to eq(data)
+        end
+      end
+
+      [0644, 0755].each do |mode|
+        it "sets mode to #{mode.to_s(8)}" do
+          builder = dump.new_version
+          builder.add('a', 'test', mode)
+
+          path = File.join(tmp_dir, 'file')
+          builder['a'].write_to(path)
+
+          expect(File.stat(path).mode & 0777).to eq(mode)
+        end
+      end
+    end
+
     describe :exchange do
       let(:other_dump) do
         GitDump.new File.join(tmp_dir, 'other'), :create => true
