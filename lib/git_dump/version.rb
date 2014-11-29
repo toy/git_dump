@@ -1,5 +1,4 @@
 require 'git_dump/tree'
-require 'git_dump/entry'
 
 class GitDump
   # Reading version

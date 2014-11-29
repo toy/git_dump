@@ -1,4 +1,5 @@
 require 'git_dump/path_object'
+require 'git_dump/entry'
 
 class GitDump
   # Interface to git tree
