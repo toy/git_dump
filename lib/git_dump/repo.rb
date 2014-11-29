@@ -9,15 +9,16 @@ class GitDump
     # Exception during initialization
     class InitException < StandardError; end
 
-    attr_reader :git_dir
+    attr_reader :path
 
     def initialize(path, options)
+      @path = path
       resolve(path, options)
     end
 
     # Construct git command specifying `--git-dir=git_dir`
     def git(command, *args)
-      Command.new(:git, "--git-dir=#{git_dir}", command, *args)
+      Command.new(:git, "--git-dir=#{@git_dir}", command, *args)
     end
 
     # New version builder
@@ -89,7 +90,7 @@ class GitDump
     end
 
     def inspect
-      "#<#{self.class} git_dir=#{git_dir}>"
+      "#<#{self.class} path=#{path}>"
     end
 
   private
