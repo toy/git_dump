@@ -106,6 +106,7 @@ describe GitDump do
       expect(version['stringio/x'].read).to eq('test b')
       expect(version['io/x'].read).to eq(File.read(__FILE__))
       expect(version['path/x'].read).to eq(File.read(__FILE__))
+      expect(version['should/not/be/there']).to be_nil
     end
 
     it 'cleans paths' do
