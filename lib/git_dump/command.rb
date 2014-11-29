@@ -37,7 +37,7 @@ class GitDump
       cmd = args.shelljoin
       if env
         env_str = env.map{ |k, v| "#{k}=#{v}" }.shelljoin
-        cmd = "#{env_str} #{cmd}"
+        cmd = "export #{env_str}; #{cmd}"
       end
       cmd = "cd #{chdir}; #{cmd}" if chdir
       cmd << ' > /dev/null' if no_stdout
