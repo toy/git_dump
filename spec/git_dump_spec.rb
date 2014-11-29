@@ -143,6 +143,25 @@ describe GitDump do
       expect(builder['a/a'].read).to eq('hello')
     end
 
+    it 'removes entries and trees' do
+      builder = dump.new_version
+      builder['a/a/a'] = 'test a'
+      builder['a/a/b'] = 'test b'
+      builder['b/a'] = 'test c'
+      builder['b/b'] = 'test d'
+
+      builder['a/a'] = nil
+      builder['b/a'] = nil
+
+      version = builder.commit
+
+      expect(version.each.map(&:path)).to match_array(%w[a b])
+
+      expect(version['a'].each.map(&:path)).to be_empty
+
+      expect(version['b'].each.map(&:path)).to match_array(%w[b/b])
+    end
+
     DATAS.each do |type, data|
       it "does not change #{type} data" do
         builder = dump.new_version

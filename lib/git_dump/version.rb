@@ -33,6 +33,7 @@ class GitDump
       end
 
       # Store data `content` with mode `mode` at `path`
+      # Pass `nil` as content to remove
       def store(path, content, mode = 0644)
         tree.store(path, content, mode)
       end

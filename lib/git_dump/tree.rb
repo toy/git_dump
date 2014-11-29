@@ -61,8 +61,9 @@ class GitDump
       end
 
       # Store data `content` with mode `mode` at `path`
+      # Pass `nil` as content to remove
       def store(path, content, mode = 0644)
-        put_at(parse_path(path), repo.data_sha(content), mode)
+        put_at(parse_path(path), content && repo.data_sha(content), mode)
       end
       alias_method :[]=, :store
 
@@ -92,7 +93,11 @@ class GitDump
       def put_at(parts, sha, mode)
         name = parts.shift
         if parts.empty?
-          @entries[name] = Entry.new(repo, path, name, sha, mode)
+          if sha.nil?
+            @entries.delete(name)
+          else
+            @entries[name] = Entry.new(repo, path, name, sha, mode)
+          end
         else
           unless @entries[name].is_a?(self.class)
             @entries[name] = self.class.new(repo, path, name)
