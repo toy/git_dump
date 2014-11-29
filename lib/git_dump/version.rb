@@ -29,7 +29,7 @@ class GitDump
       attr_reader :repo
       def initialize(repo)
         @repo = repo
-        @tree = Tree::Builder.new(repo, nil)
+        @tree = Tree::Builder.new(repo, nil, nil)
       end
 
       # Store data `content` with mode `mode` at `path`
@@ -118,7 +118,7 @@ class GitDump
   private
 
     def tree
-      @tree ||= Tree.new(repo, nil, sha)
+      @tree ||= Tree.new(repo, nil, nil, sha)
     end
   end
 end

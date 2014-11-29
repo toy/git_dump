@@ -1,6 +1,8 @@
+require 'git_dump/path_object'
+
 class GitDump
   # Interface to git tree
-  class Tree
+  class Tree < PathObject
     # Common methods in Tree and Builder
     module Base
       # Retrive tree or entry at path, return nil if there is nothing at path
@@ -50,12 +52,11 @@ class GitDump
     end
 
     # Creating tree
-    class Builder
+    class Builder < PathObject
       include Base
 
-      attr_reader :repo, :path
-      def initialize(repo, path)
-        @repo, @path = repo, path
+      def initialize(repo, dir, name)
+        super(repo, dir, name)
         @entries = {}
       end
 
@@ -91,12 +92,10 @@ class GitDump
       def put_at(parts, sha, mode)
         name = parts.shift
         if parts.empty?
-          @entries[name] =
-            Entry.new(repo, path ? "#{path}/#{name}" : name, sha, mode)
+          @entries[name] = Entry.new(repo, path, name, sha, mode)
         else
           unless @entries[name].is_a?(self.class)
-            @entries[name] =
-              self.class.new(repo, path ? "#{path}/#{name}" : name)
+            @entries[name] = self.class.new(repo, path, name)
           end
           @entries[name].put_at(parts, sha, mode)
         end
@@ -105,9 +104,10 @@ class GitDump
 
     include Base
 
-    attr_reader :repo, :path, :sha
-    def initialize(repo, path, sha)
-      @repo, @path, @sha = repo, path, sha
+    attr_reader :sha
+    def initialize(repo, dir, name, sha)
+      super(repo, dir, name)
+      @sha = sha
       @entries = read_entries
     end
 
@@ -122,9 +122,9 @@ class GitDump
           sha = m[3]
           name = m[4]
           entries[name] = if type == 'blob'
-            Entry.new(repo, path ? "#{path}/#{name}" : name, sha, mode)
+            Entry.new(repo, path, name, sha, mode)
           else
-            Tree.new(repo, path ? "#{path}/#{name}" : name, sha)
+            Tree.new(repo, path, name, sha)
           end
         else
           fail "Unexpected: #{line}"

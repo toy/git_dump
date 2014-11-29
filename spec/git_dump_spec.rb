@@ -109,6 +109,20 @@ describe GitDump do
       expect(version['should/not/be/there']).to be_nil
     end
 
+    it 'returns path and name' do
+      builder = dump.new_version
+      builder['a/b/c'] = 'test'
+
+      %w[
+        a
+        a/b
+        a/b/c
+      ].each do |path|
+        expect(builder[path].path).to eq(path)
+        expect(builder[path].name).to eq(path.split('/').last)
+      end
+    end
+
     it 'cleans paths' do
       builder = dump.new_version
       builder['//aa//fa//'] = 'test a'
