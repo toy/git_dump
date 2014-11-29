@@ -108,17 +108,29 @@ class GitDump
     attr_reader :repo, :path, :sha
     def initialize(repo, path, sha)
       @repo, @path, @sha = repo, path, sha
-      @entries = {}
+      @entries = read_entries
+    end
 
+  private
+
+    def read_entries
+      entries = {}
       repo.git('ls-tree', sha).stripped_lines.each do |line|
-        if (m = /^(\d{6}) blob ([0-9a-f]{40})\t(.*)$/.match(line))
-          @entries[m[3]] = Entry.new(repo, m[3], m[2], m[1].to_i(8))
-        elsif (m = /^(\d{6}) tree ([0-9a-f]{40})\t(.*)$/.match(line))
-          @entries[m[3]] = Tree.new(repo, m[3], m[2])
+        if (m = /^(\d{6}) (blob|tree) ([0-9a-f]{40})\t(.*)$/.match(line))
+          mode = m[1].to_i(8)
+          type = m[2]
+          sha = m[3]
+          name = m[4]
+          entries[name] = if type == 'blob'
+            Entry.new(repo, path ? "#{path}/#{name}" : name, sha, mode)
+          else
+            Tree.new(repo, path ? "#{path}/#{name}" : name, sha)
+          end
         else
           fail "Unexpected: #{line}"
         end
       end
+      entries
     end
   end
 end
