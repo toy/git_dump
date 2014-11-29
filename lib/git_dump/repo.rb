@@ -1,5 +1,6 @@
 require 'git_dump/git'
 require 'git_dump/version'
+require 'git_dump/version/builder'
 
 class GitDump
   # Main class: create/initialize repository, find versions, provide interface
