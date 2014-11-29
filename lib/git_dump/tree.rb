@@ -130,7 +130,7 @@ class GitDump
           entries[name] = if type == 'blob'
             Entry.new(repo, path, name, sha, mode)
           else
-            Tree.new(repo, path, name, sha)
+            self.class.new(repo, path, name, sha)
           end
         else
           fail "Unexpected: #{line}"
