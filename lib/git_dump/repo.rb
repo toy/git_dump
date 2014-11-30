@@ -57,19 +57,6 @@ class GitDump
       git(*args).run
     end
 
-    def treeify(entries)
-      @treefier ||= git('mktree', '--batch').popen('r+')
-      entries.map do |entry|
-        type = entry[:type]
-        name = entry[:name]
-        sha = entry[:sha]
-        mode = (type == :tree ? 0o040_000 : 0o100_000) | (entry[:mode] || 0)
-        @treefier.puts format("%06o %s %s\t%s", mode, type, sha, name)
-      end
-      @treefier.puts
-      @treefier.gets.chomp
-    end
-
     def inspect
       "#<#{self.class} path=#{path}>"
     end

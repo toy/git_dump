@@ -32,7 +32,41 @@ class GitDump
         @path_sha_pipe.gets.chomp
       end
 
+      # Add blob for entries to repository, return sha
+      # Each entry is a hash with following keys:
+      #   :type => :blob or :tree
+      #   :name => name string
+      #   :sha  => sha of content
+      #   :mode => last three octets of mode
+      def treeify(entries)
+        @treefier ||= git('mktree', '--batch').popen('r+')
+        entries.map do |entry|
+          values = normalize_entry(entry).values_at(:mode, :type, :sha, :name)
+          line = format("%06o %s %s\t%s", *values)
+          @treefier.puts line
+        end
+        @treefier.puts
+        @treefier.gets.chomp
+      end
+
     private
+
+      def normalize_entry(entry)
+        out = {
+          :type => entry[:type].to_sym,
+          :name => entry[:name].to_s,
+          :sha => entry[:sha].to_s,
+        }
+
+        base_mode = out[:type] == :tree ? 0o040_000 : 0o100_000
+        out[:mode] = (entry[:mode] || 0) & 0777 | base_mode
+
+        unless out[:sha] =~ /\A[0-9a-f]{40}\z/
+          fail "Expected sha1 hash, got #{out[:sha]}"
+        end
+
+        out
+      end
 
       def resolve(path, options)
         create(path, options) unless File.exist?(path)
