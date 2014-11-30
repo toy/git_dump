@@ -11,10 +11,6 @@ class GitDump
       new(:git, *args)
     end
 
-    def self.child_status
-      $CHILD_STATUS
-    end
-
     attr_reader :args
     attr_reader :env
     attr_reader :chdir

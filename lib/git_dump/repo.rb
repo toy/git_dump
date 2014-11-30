@@ -23,18 +23,14 @@ class GitDump
 
     # List of versions
     def versions
-      git('show-ref', '--tags').stripped_lines.map do |line|
+      format = '%(objectname) %(refname)'
+      cmd = git('for-each-ref', "--format=#{format}", 'refs/tags')
+      cmd.stripped_lines.map do |line|
         if (m = %r!^([0-9a-f]{40}) refs/tags/(.*)$!.match(line))
           Version.new(self, m[2], m[1])
         else
           fail "Unexpected: #{line}"
         end
-      end
-    rescue Cmd::Failure => e
-      if Cmd.child_status.exitstatus == 1
-        []
-      else
-        raise e
       end
     end
 
