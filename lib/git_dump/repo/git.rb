@@ -49,6 +49,24 @@ class GitDump
         @treefier.gets.chomp
       end
 
+      # Return pipe with contents of blob identified by sha
+      def blob_pipe(sha, &block)
+        git('cat-file', 'blob', sha).popen('rb', &block)
+      end
+
+      # Return contents of blob identified by sha
+      def blob_read(sha)
+        blob_pipe(sha, &:read)
+      end
+
+      # Ruturn path to temp file with contents of blob identified by sha
+      # for moving to path
+      def blob_unpack_tmp(sha, path)
+        dir = File.dirname(path)
+        temp_name = git('unpack-file', sha, :chdir => dir).capture.strip
+        File.join(dir, temp_name)
+      end
+
       # Receive tag with name id from repo at url
       # Use :progress => true to show progress
       def fetch(url, id, options = {})
