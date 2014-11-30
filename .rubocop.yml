@@ -8,8 +8,14 @@ Lint/EndAlignment:
 Metrics/AbcSize:
   Max: 25
 
+Metrics/CyclomaticComplexity:
+  Max: 10
+
 Metrics/MethodLength:
   Max: 15
+
+Metrics/PerceivedComplexity:
+  Max: 8
 
 Style/AccessModifierIndentation:
   EnforcedStyle: outdent
