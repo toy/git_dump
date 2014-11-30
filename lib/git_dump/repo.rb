@@ -1,3 +1,4 @@
+require 'git_dump/repo/git'
 require 'git_dump/cmd'
 require 'git_dump/version'
 require 'git_dump/version/builder'
@@ -6,8 +7,7 @@ class GitDump
   # Main class: create/initialize repository, find versions, provide interface
   # to git
   class Repo
-    # Exception during initialization
-    class InitException < StandardError; end
+    include Git
 
     attr_reader :path
 
@@ -91,38 +91,6 @@ class GitDump
 
     def inspect
       "#<#{self.class} path=#{path}>"
-    end
-
-  private
-
-    def resolve(path, options)
-      create(path, options) unless File.exist?(path)
-
-      unless File.directory?(path)
-        fail InitException, "#{path} is not a directory"
-      end
-
-      begin
-        options = {:chdir => path, :no_stderr => true}
-        relative = Cmd.git('rev-parse', '--git-dir', options).capture.strip
-      rescue Cmd::Failure => e
-        raise InitException, e.message, e.backtrace
-      end
-
-      @git_dir = File.expand_path(relative, path)
-    end
-
-    def create(path, options)
-      unless options[:create]
-        fail InitException, "#{path} does not exist and got no :create option"
-      end
-
-      bare_arg = options[:create] != :non_bare ? '--bare' : '--no-bare'
-      begin
-        Cmd.git('init', '-q', bare_arg, path, :no_stderr => true).run
-      rescue Cmd::Failure => e
-        raise InitException, e.message, e.backtrace
-      end
     end
   end
 end
