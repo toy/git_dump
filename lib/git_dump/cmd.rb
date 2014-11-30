@@ -26,14 +26,7 @@ class GitDump
       options = args.pop if args.last.is_a?(Hash)
       @args = args.map(&:to_s)
 
-      return unless options
-
-      @env = options.delete(:env).to_hash if options.key?(:env)
-      @chdir = options.delete(:chdir).to_s if options.key?(:chdir)
-      @no_stdout = !!options.delete(:no_stdout) if options.key?(:no_stdout)
-      @no_stderr = !!options.delete(:no_stderr) if options.key?(:no_stderr)
-
-      fail "Unknown options: #{options.inspect}" unless options.empty?
+      parse_options(options) if options
     end
 
     # Construct command string
@@ -82,6 +75,15 @@ class GitDump
     end
 
   private
+
+    def parse_options(options)
+      @env = options.delete(:env).to_hash if options.key?(:env)
+      @chdir = options.delete(:chdir).to_s if options.key?(:chdir)
+      @no_stdout = !!options.delete(:no_stdout) if options.key?(:no_stdout)
+      @no_stderr = !!options.delete(:no_stderr) if options.key?(:no_stderr)
+
+      fail "Unknown options: #{options.inspect}" unless options.empty?
+    end
 
     def arguments
       if RUBY_VERSION < '1.9' || defined?(JRUBY_VERSION)
