@@ -84,6 +84,13 @@ class GitDump
         end
       end
 
+      # Remove tag with name id
+      def remove_tag(id)
+        args = %W[tag --delete #{id}]
+        args << {:no_stdout => true}
+        git(*args).run
+      end
+
       # Receive tag with name id from repo at url
       # Use :progress => true to show progress
       def fetch(url, id, options = {})

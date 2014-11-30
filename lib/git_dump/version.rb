@@ -19,9 +19,7 @@ class GitDump
 
     # Remove this version
     def remove
-      args = %W[tag --delete #{id}]
-      args << {:no_stdout => true}
-      repo.git(*args).run
+      repo.remove_tag(id)
     end
 
     def inspect
