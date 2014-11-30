@@ -18,7 +18,7 @@ class GitDump
 
     # Construct git command specifying `--git-dir=git_dir`
     def git(command, *args)
-      Cmd.new(:git, "--git-dir=#{@git_dir}", command, *args)
+      Cmd.git("--git-dir=#{@git_dir}", command, *args)
     end
 
     # New version builder
@@ -104,7 +104,7 @@ class GitDump
 
       begin
         options = {:chdir => path, :no_stderr => true}
-        relative = Cmd.new(:git, 'rev-parse', '--git-dir', options).capture.strip
+        relative = Cmd.git('rev-parse', '--git-dir', options).capture.strip
       rescue Cmd::Failure => e
         raise InitException, e.message, e.backtrace
       end
@@ -119,7 +119,7 @@ class GitDump
 
       bare_arg = options[:create] != :non_bare ? '--bare' : '--no-bare'
       begin
-        Cmd.new(:git, 'init', '-q', bare_arg, path, :no_stderr => true).run
+        Cmd.git('init', '-q', bare_arg, path, :no_stderr => true).run
       rescue Cmd::Failure => e
         raise InitException, e.message, e.backtrace
       end

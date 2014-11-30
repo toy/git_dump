@@ -7,6 +7,10 @@ class GitDump
     # Non succesfull exit code
     class Failure < StandardError; end
 
+    def self.git(*args)
+      new(:git, *args)
+    end
+
     def self.child_status
       $CHILD_STATUS
     end
