@@ -49,6 +49,50 @@ class GitDump
         @treefier.gets.chomp
       end
 
+      # Create commit for tree_sha, return sha
+      # options:
+      #   :date => author date (by default now)
+      #   :message => commit message (by default empty)
+      def commit(tree_sha, options = {})
+        env = {}
+        if options[:date]
+          env['GIT_AUTHOR_DATE'] = options[:date].strftime('%s %z')
+        end
+
+        git('commit-tree', tree_sha, :env => env).popen('r+') do |f|
+          f.puts options[:message] if options[:message]
+          f.close_write
+          f.read.chomp
+        end
+      end
+
+      # Create tag for commit_sha with name constructed from name_parts, return
+      # name. name_parts can be an array or a string separated by /
+      # options:
+      #   :date => tagger date
+      #   :message => tag message (by default empty)
+      def tag(commit_sha, name_parts, options = {})
+        name_parts = name_parts.split('/') unless name_parts.is_a?(Array)
+
+        name = name_parts.map do |part|
+          part.gsub(/[^a-zA-Z0-9\-_,]+/, '_')
+        end.reject(&:empty?).join('/')
+
+        env = {}
+        if options[:date]
+          env['GIT_COMMITTER_DATE'] = options[:date].strftime('%s %z')
+        end
+
+        args = %w[tag]
+        args << '-m' << options[:message] if options[:message]
+        args << name << commit_sha
+        args << {:env => env}
+
+        git(*args).run
+
+        name
+      end
+
       # Return pipe with contents of blob identified by sha
       def blob_pipe(sha, &block)
         git('cat-file', 'blob', sha).popen('rb', &block)
