@@ -49,6 +49,28 @@ class GitDump
         @treefier.gets.chomp
       end
 
+      # Receive tag with name id from repo at url
+      # Use :progress => true to show progress
+      def fetch(url, id, options = {})
+        transfer(:fetch, url, id, options)
+      end
+
+      # Send tag with name id to repo at url
+      # Use :progress => true to show progress
+      def push(url, id, options = {})
+        transfer(:push, url, id, options)
+      end
+
+      # Run garbage collection
+      # Use :auto => true to run only if GC is required
+      # Use :aggressive => true to run GC more aggressively
+      def gc(options = {})
+        args = %w[gc --quiet]
+        args << '--auto' if options[:auto]
+        args << '--aggressive' if options[:aggressive]
+        git(*args).run
+      end
+
     private
 
       def normalize_entry(entry)
@@ -66,6 +88,13 @@ class GitDump
         end
 
         out
+      end
+
+      def transfer(command, url, id, options)
+        ref = "refs/tags/#{id}"
+        args = %W[#{command} --no-tags #{url} #{ref}:#{ref}]
+        args << '--quiet' unless options[:progress]
+        git(*args).run
       end
 
       def resolve(path, options)

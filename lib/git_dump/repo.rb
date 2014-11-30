@@ -38,25 +38,6 @@ class GitDump
       end
     end
 
-    # Receive version with id from repo at url
-    # Use :progress => true to show progress
-    def fetch(url, id, options = {})
-      ref = "refs/tags/#{id}"
-      args = %W[fetch --no-tags #{url} #{ref}:#{ref}]
-      args << '--quiet' unless options[:progress]
-      git(*args).run
-    end
-
-    # Run garbage collection
-    # Use :auto => true to run only if GC is required
-    # Use :aggressive => true to run GC more aggressively
-    def gc(options = {})
-      args = %w[gc --quiet]
-      args << '--auto' if options[:auto]
-      args << '--aggressive' if options[:aggressive]
-      git(*args).run
-    end
-
     def inspect
       "#<#{self.class} path=#{path}>"
     end
