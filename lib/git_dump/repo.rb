@@ -1,4 +1,4 @@
-require 'git_dump/command'
+require 'git_dump/cmd'
 require 'git_dump/version'
 require 'git_dump/version/builder'
 
@@ -18,7 +18,7 @@ class GitDump
 
     # Construct git command specifying `--git-dir=git_dir`
     def git(command, *args)
-      Command.new(:git, "--git-dir=#{@git_dir}", command, *args)
+      Cmd.new(:git, "--git-dir=#{@git_dir}", command, *args)
     end
 
     # New version builder
@@ -35,8 +35,8 @@ class GitDump
           fail "Unexpected: #{line}"
         end
       end
-    rescue Command::Failure => e
-      if Command.child_status.exitstatus == 1
+    rescue Cmd::Failure => e
+      if Cmd.child_status.exitstatus == 1
         []
       else
         raise e
@@ -104,8 +104,8 @@ class GitDump
 
       begin
         options = {:chdir => path, :no_stderr => true}
-        relative = Command.new(:git, 'rev-parse', '--git-dir', options).capture.strip
-      rescue Command::Failure => e
+        relative = Cmd.new(:git, 'rev-parse', '--git-dir', options).capture.strip
+      rescue Cmd::Failure => e
         raise InitException, e.message, e.backtrace
       end
 
@@ -119,8 +119,8 @@ class GitDump
 
       bare_arg = options[:create] != :non_bare ? '--bare' : '--no-bare'
       begin
-        Command.new(:git, 'init', '-q', bare_arg, path, :no_stderr => true).run
-      rescue Command::Failure => e
+        Cmd.new(:git, 'init', '-q', bare_arg, path, :no_stderr => true).run
+      rescue Cmd::Failure => e
         raise InitException, e.message, e.backtrace
       end
     end

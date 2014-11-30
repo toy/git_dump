@@ -3,7 +3,7 @@ require 'English'
 
 class GitDump
   # Running commands using system and popen
-  class Command
+  class Cmd
     # Non succesfull exit code
     class Failure < StandardError; end
 
