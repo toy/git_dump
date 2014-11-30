@@ -86,15 +86,12 @@ class GitDump
     end
 
     def arguments
-      if RUBY_VERSION < '1.9' || defined?(JRUBY_VERSION)
-        to_s
-      else
-        options = {}
-        options[:chdir] = chdir if chdir
-        options[:out] = '/dev/null' if no_stdout
-        options[:err] = '/dev/null' if no_stderr
-        [env || {}] + args + [options]
-      end
+      return to_s if RUBY_VERSION < '1.9' || defined?(JRUBY_VERSION)
+      options = {}
+      options[:chdir] = chdir if chdir
+      options[:out] = '/dev/null' if no_stdout
+      options[:err] = '/dev/null' if no_stderr
+      [env || {}] + args + [options]
     end
   end
 end
