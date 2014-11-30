@@ -26,14 +26,14 @@ class GitDump
       end
 
       def sha
-        lines = @entries.map do |name, entry|
+        repo.treeify(@entries.map do |name, entry|
+          attributes = {:name => name, :sha => entry.sha}
           if entry.is_a?(self.class)
-            "040000 tree #{entry.sha}\t#{name}"
+            attributes.merge(:type => :tree)
           else
-            "100#{entry.mode.to_s(8)} blob #{entry.sha}\t#{name}"
+            attributes.merge(:type => :blob, :mode => entry.mode)
           end
-        end
-        repo.treeify(lines)
+        end)
       end
 
       def inspect
