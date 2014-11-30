@@ -16,11 +16,6 @@ class GitDump
       resolve(path, options)
     end
 
-    # Construct git command specifying `--git-dir=git_dir`
-    def git(command, *args)
-      Cmd.git("--git-dir=#{@git_dir}", command, *args)
-    end
-
     # New version builder
     def new_version
       Version::Builder.new(self)

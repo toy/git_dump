@@ -5,6 +5,11 @@ class GitDump
       # Exception during initialization
       class InitException < StandardError; end
 
+      # Construct git command specifying git-dir
+      def git(command, *args)
+        Cmd.git("--git-dir=#{@git_dir}", command, *args)
+      end
+
       # Add blob for content to repository, return sha
       def data_sha(content)
         @data_sha_command ||= git(*%w[hash-object -w --no-filters --stdin])
