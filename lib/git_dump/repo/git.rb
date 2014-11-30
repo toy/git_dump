@@ -67,6 +67,23 @@ class GitDump
         File.join(dir, temp_name)
       end
 
+      # Read tree at sha returning list of entries
+      # Each entry is a hash like one for treeify
+      def tree_entries(sha)
+        git('ls-tree', sha).stripped_lines.map do |line|
+          if (m = /^(\d{6}) (blob|tree) ([0-9a-f]{40})\t(.*)$/.match(line))
+            {
+              :mode => m[1].to_i(8),
+              :type => m[2].to_sym,
+              :sha => m[3],
+              :name => m[4],
+            }
+          else
+            fail "Unexpected: #{line}"
+          end
+        end
+      end
+
       # Receive tag with name id from repo at url
       # Use :progress => true to show progress
       def fetch(url, id, options = {})

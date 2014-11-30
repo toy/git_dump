@@ -18,19 +18,11 @@ class GitDump
 
     def read_entries
       entries = {}
-      repo.git('ls-tree', sha).stripped_lines.each do |line|
-        if (m = /^(\d{6}) (blob|tree) ([0-9a-f]{40})\t(.*)$/.match(line))
-          mode = m[1].to_i(8)
-          type = m[2]
-          sha = m[3]
-          name = m[4]
-          entries[name] = if type == 'blob'
-            Entry.new(repo, path, name, sha, mode)
-          else
-            self.class.new(repo, path, name, sha)
-          end
+      repo.tree_entries(sha).each do |entry|
+        entries[entry[:name]] = if entry[:type] == :tree
+          self.class.new(repo, path, entry[:name], entry[:sha])
         else
-          fail "Unexpected: #{line}"
+          Entry.new(repo, path, entry[:name], entry[:sha], entry[:mode])
         end
       end
       entries
