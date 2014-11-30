@@ -14,8 +14,20 @@ script:
   ; else
     bundle exec rubocop
   ; fi
+env:
+  -
+  - RUGGED=1
 matrix:
   fast_finish: true
   include:
     - env: RUBOCOP=true
       rvm: default
+  exclude:
+    - rvm: 1.8.7
+      env: RUGGED=1
+    - rvm: jruby-18mode
+      env: RUGGED=1
+    - rvm: jruby-19mode
+      env: RUGGED=1
+    - rvm: ree
+      env: RUGGED=1
