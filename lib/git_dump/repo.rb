@@ -62,26 +62,6 @@ class GitDump
       git(*args).run
     end
 
-    def data_sha(content)
-      @data_sha_command ||= git(*%w[hash-object -w --no-filters --stdin])
-      @data_sha_command.popen('r+') do |f|
-        if content.respond_to?(:read)
-          f.write(content.read(4096)) until content.eof?
-        else
-          f.write(content)
-        end
-        f.close_write
-        f.read.chomp
-      end
-    end
-
-    def path_sha(path)
-      @path_sha_pipe ||=
-        git(*%w[hash-object -w --no-filters --stdin-paths]).popen('r+')
-      @path_sha_pipe.puts(path)
-      @path_sha_pipe.gets.chomp
-    end
-
     def treeify(lines)
       @treefier ||= git('mktree', '--batch').popen('r+')
       @treefier.puts lines
