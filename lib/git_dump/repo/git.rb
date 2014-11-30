@@ -128,6 +128,25 @@ class GitDump
         end
       end
 
+      # Return list of entries per tag ref
+      # Each entry is a hash with following keys:
+      #   :sha => tag or commit sha
+      #   :name => ref name
+      def refs
+        format = '%(objectname) %(refname)'
+        cmd = git('for-each-ref', "--format=#{format}", 'refs/tags')
+        cmd.stripped_lines.map do |line|
+          if (m = %r!^([0-9a-f]{40}) refs/tags/(.*)$!.match(line))
+            {
+              :sha => m[1],
+              :name => m[2],
+            }
+          else
+            fail "Unexpected: #{line}"
+          end
+        end
+      end
+
       # Remove tag with name id
       def remove_tag(id)
         args = %W[tag --delete #{id}]
