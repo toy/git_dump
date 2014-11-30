@@ -14,17 +14,12 @@ class GitDump
     # Send this version to repo at url
     # Use :progress => true to show progress
     def push(url, options = {})
-      ref = "refs/tags/#{id}"
-      args = %W[push --no-tags #{url} #{ref}:#{ref}]
-      args << '--quiet' unless options[:progress]
-      repo.git(*args).run
+      repo.push(url, id, options)
     end
 
     # Remove this version
     def remove
-      args = %W[tag --delete #{id}]
-      args << {:no_stdout => true}
-      repo.git(*args).run
+      repo.remove_tag(id)
     end
 
     def inspect

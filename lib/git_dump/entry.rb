@@ -11,19 +11,17 @@ class GitDump
 
     # Pipe for reading data
     def open(&block)
-      repo.git('cat-file', 'blob', sha).popen('rb', &block)
+      repo.blob_pipe(sha, &block)
     end
 
     # Data
     def read
-      open(&:read)
+      repo.blob_read(sha)
     end
 
     # Write to path
     def write_to(path)
-      dir = File.dirname(path)
-      temp_name = repo.git('unpack-file', sha, :chdir => dir).capture.strip
-      temp_path = File.join(dir, temp_name)
+      temp_path = repo.blob_unpack_tmp(sha, path)
       File.chmod(mode, temp_path)
       File.rename(temp_path, path)
     end

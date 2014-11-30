@@ -34,28 +34,18 @@ class GitDump
         time = options[:time] || Time.now
         tags = Array(options[:tags]).join(',')
 
-        time_s = time.strftime('%s %z')
-        env = {
-          'GIT_AUTHOR_DATE' => time_s,
-          'GIT_COMMITTER_DATE' => time_s,
-        }
-
-        sha = repo.git('commit-tree', tree.sha, :env => env).popen('r+') do |f|
-          # f.puts description
-          f.close_write
-          f.read.chomp
-        end
-        tag_name = [
+        name_parts = [
           time.utc.strftime('%Y-%m-%d_%H-%M-%S'),
           GitDump.hostname,
           GitDump.uuid,
           tags,
-        ].map do |component|
-          cleanup_ref_component(component)
-        end.reject(&:empty?).join('/')
-        repo.git('tag', tag_name, sha, :env => env).run
+        ]
+
+        commit_sha = repo.commit(tree.sha, :date => time)
+        tag_name = repo.tag(commit_sha, name_parts, :date => time)
         repo.gc(:auto => true)
-        Version.new(repo, tag_name, sha)
+
+        Version.new(repo, tag_name, commit_sha)
       end
 
       def inspect
@@ -65,10 +55,6 @@ class GitDump
     private
 
       attr_reader :tree
-
-      def cleanup_ref_component(component)
-        component.gsub(/[^a-zA-Z0-9\-_,]+/, '_')
-      end
     end
   end
 end

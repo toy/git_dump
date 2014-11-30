@@ -14,7 +14,7 @@ class GitDump
     @repo = Repo.new(path, options)
   end
 
-  def_delegators :@repo, :git_dir, :new_version, :versions, :fetch, :gc
+  def_delegators :@repo, :path, :new_version, :versions, :fetch, :gc
 
   # hostname as returned by `hostname` or `unknow`
   def self.hostname

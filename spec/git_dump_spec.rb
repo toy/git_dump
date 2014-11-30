@@ -36,12 +36,12 @@ describe GitDump do
 
     it 'initializes with bare git repo' do
       system('git', 'init', '-q', '--bare', path)
-      expect(GitDump.new(path).git_dir).to eq(path)
+      expect(GitDump.new(path).path).to eq(path)
     end
 
-    it 'initialize with full git repo' do
+    it 'initializes with full git repo' do
       system('git', 'init', '-q', path)
-      expect(GitDump.new(path).git_dir).to eq(File.join(path, '.git'))
+      expect(GitDump.new(path).path).to eq(path)
     end
 
     it 'creates bare git repo' do
@@ -50,7 +50,7 @@ describe GitDump do
         expect(`git rev-parse --git-dir`.strip).to eq('.')
         expect(`git rev-parse --is-bare-repository`.strip).to eq('true')
       end
-      expect(dump.git_dir).to eq(path)
+      expect(dump.path).to eq(path)
     end
 
     it 'creates full git repo' do
@@ -59,7 +59,7 @@ describe GitDump do
         expect(`git rev-parse --git-dir`.strip).to eq('.git')
         expect(`git rev-parse --is-bare-repository`.strip).to eq('false')
       end
-      expect(dump.git_dir).to eq(File.join(path, '.git'))
+      expect(dump.path).to eq(path)
     end
 
     it 'raises if dump does not exist and not asked to create' do
@@ -94,7 +94,7 @@ describe GitDump do
       builder.store_from('path/x', __FILE__)
       built = builder.commit
 
-      reinit_dump = GitDump.new(dump.git_dir)
+      reinit_dump = GitDump.new(dump.path)
 
       expect(reinit_dump.versions.length).to eq(1)
 
@@ -268,13 +268,13 @@ describe GitDump do
       end
 
       it 'pushes version' do
-        built.push(other_dump.git_dir)
+        built.push(other_dump.path)
 
         check_received_version
       end
 
       it 'fetches version' do
-        other_dump.fetch(dump.git_dir, built.id)
+        other_dump.fetch(dump.path, built.id)
 
         check_received_version
       end
