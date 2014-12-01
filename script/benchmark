@@ -36,7 +36,7 @@ Dir.mktmpdir do |dir|
 
   [
     ['1K', 1_000, 1024],
-    ['1M', 100, 1024 ** 2],
+    ['10M', 10, 10 * 1024 * 1024],
   ].each do |label, times, size|
     datas = Array.new(times) do
       urandom.read(size)
