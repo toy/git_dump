@@ -95,7 +95,12 @@ class GitDump
 
       # Return contents of blob identified by sha
       def blob_read(sha)
-        blob_pipe(sha, &:read)
+        @blob_read_pipe ||= git(*%w[cat-file --batch]).popen('rb+')
+        @blob_read_pipe.puts(sha)
+        size = @blob_read_pipe.gets.split(' ')[2].to_i
+        content = @blob_read_pipe.read(size)
+        @blob_read_pipe.gets
+        content
       end
 
       # Ruturn path to temp file with contents of blob identified by sha
