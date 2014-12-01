@@ -1,3 +1,5 @@
+require 'tempfile'
+
 class GitDump
   class Repo
     # Interface to git using system calls and pipes
@@ -105,11 +107,14 @@ class GitDump
 
       # Write contents of blob to file at path and set its mode
       def blob_unpack(sha, path, mode)
-        dir = File.dirname(path)
-        temp_name = git('unpack-file', sha, :chdir => dir).capture.strip
-        temp_path = File.join(dir, temp_name)
-        File.chmod(mode, temp_path)
-        File.rename(temp_path, path)
+        Tempfile.open('git_dump', File.dirname(path)) do |temp|
+          temp.binmode
+          temp.write(blob_read(sha))
+          temp.close
+
+          File.chmod(mode, temp.path)
+          File.rename(temp.path, path)
+        end
       end
 
       # Read tree at sha returning list of entries
