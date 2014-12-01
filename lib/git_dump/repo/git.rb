@@ -103,12 +103,13 @@ class GitDump
         content
       end
 
-      # Ruturn path to temp file with contents of blob identified by sha
-      # for moving to path
-      def blob_unpack_tmp(sha, path)
+      # Write contents of blob to file at path and set its mode
+      def blob_unpack(sha, path, mode)
         dir = File.dirname(path)
         temp_name = git('unpack-file', sha, :chdir => dir).capture.strip
-        File.join(dir, temp_name)
+        temp_path = File.join(dir, temp_name)
+        File.chmod(mode, temp_path)
+        File.rename(temp_path, path)
       end
 
       # Read tree at sha returning list of entries
