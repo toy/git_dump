@@ -11,6 +11,8 @@ rvm:
 script:
   if [ -z "$RUBOCOP" ]; then
     bundle exec rspec
+  ; elif [ -z "$BENCHMARK" ]; then
+    RUGGED=0 bundle exec script/benchmark; RUGGED=1 bundle exec script/benchmark
   ; else
     bundle exec rubocop
   ; fi
@@ -21,6 +23,8 @@ matrix:
   fast_finish: true
   include:
     - env: RUBOCOP=true
+      rvm: default
+    - env: BENCHMARK=true RUGGED=1
       rvm: default
   exclude:
     - rvm: 1.8.7
