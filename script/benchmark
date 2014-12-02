@@ -27,6 +27,9 @@ puts "Using #{defined?(Rugged) ? 'libgit2' : 'git commands'}:"
 
 urandom = File.open('/dev/urandom')
 
+ENV['GIT_AUTHOR_NAME'] = ENV['GIT_COMMITTER_NAME'] = 'git_dump'
+ENV['GIT_AUTHOR_EMAIL'] = ENV['GIT_COMMITTER_EMAIL'] = 'bm@git_dump'
+
 Dir.mktmpdir do |dir|
   dump = measure 'init' do
     GitDump.new(File.join(dir, 'bm.git'), :create => true)
