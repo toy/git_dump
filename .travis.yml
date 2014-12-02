@@ -9,12 +9,12 @@ rvm:
   - jruby-19mode
   - ree
 script:
-  if [ -z "$RUBOCOP" ]; then
-    bundle exec rspec
-  ; elif [ -z "$BENCHMARK" ]; then
+  if [ -n "$RUBOCOP" ]; then
+    bundle exec rubocop
+  ; elif [ -n "$BENCHMARK" ]; then
     RUGGED=0 bundle exec script/benchmark; RUGGED=1 bundle exec script/benchmark
   ; else
-    bundle exec rubocop
+    bundle exec rspec
   ; fi
 env:
   -
