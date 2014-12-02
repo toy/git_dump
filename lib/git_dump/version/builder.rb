@@ -37,8 +37,8 @@ class GitDump
         name_parts = [
           time.utc.strftime('%Y-%m-%d_%H-%M-%S'),
           GitDump.hostname,
-          GitDump.uuid,
           tags,
+          GitDump.uuid,
         ]
 
         commit_sha = repo.commit(tree.sha, :date => time)
