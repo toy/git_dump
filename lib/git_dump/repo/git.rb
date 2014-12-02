@@ -96,20 +96,30 @@ class GitDump
       end
 
       # Return contents of blob identified by sha
-      def blob_read(sha)
+      # If io is specified, then content will be written to io
+      def blob_read(sha, io = nil)
         @blob_read_pipe ||= git(*%w[cat-file --batch]).popen('rb+')
         @blob_read_pipe.puts(sha)
         size = @blob_read_pipe.gets.split(' ')[2].to_i
-        content = @blob_read_pipe.read(size)
+        result = if io
+          while size > 0
+            chunk = [size, 4096].min
+            io.write(@blob_read_pipe.read(chunk))
+            size -= chunk
+          end
+          io
+        else
+          @blob_read_pipe.read(size)
+        end
         @blob_read_pipe.gets
-        content
+        result
       end
 
       # Write contents of blob to file at path and set its mode
       def blob_unpack(sha, path, mode)
         Tempfile.open('git_dump', File.dirname(path)) do |temp|
           temp.binmode
-          temp.write(blob_read(sha))
+          blob_read(sha, temp)
           temp.close
 
           File.chmod(mode, temp.path)

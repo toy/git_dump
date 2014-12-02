@@ -42,8 +42,15 @@ class GitDump
       end
 
       # Return contents of blob identified by sha
-      def blob_read(sha)
-        ::Rugged::Object.new(repo, sha).content
+      # If io is specified, then content will be written to io
+      def blob_read(sha, io = nil)
+        content = ::Rugged::Object.new(repo, sha).content
+        if io
+          io.write content
+          io
+        else
+          content
+        end
       end
 
       # Read tree at sha returning list of entries
