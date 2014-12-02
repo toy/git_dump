@@ -1,0 +1,84 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
+require 'rubygems'
+require 'bundler/setup'
+
+require 'git_dump'
+require 'benchmark'
+require 'tmpdir'
+
+def measure(label, number = nil, &block)
+  label = "#{label} x#{number}" if number
+  label = "#{label}:"
+
+  result = nil
+  print label.ljust(30)
+  times = Benchmark.measure do
+    (number || 1).times do |n|
+      result = block.call(n)
+    end
+  end
+  puts " #{times}"
+  result
+end
+
+puts "Using #{defined?(Rugged) ? 'libgit2' : 'git commands'}:"
+
+urandom = File.open('/dev/urandom')
+
+ENV['GIT_AUTHOR_NAME'] = ENV['GIT_COMMITTER_NAME'] = 'git_dump'
+ENV['GIT_AUTHOR_EMAIL'] = ENV['GIT_COMMITTER_EMAIL'] = 'bm@git_dump'
+
+Dir.mktmpdir do |dir|
+  dump = measure 'init' do
+    GitDump.new(File.join(dir, 'bm.git'), :create => true)
+  end
+
+  builder = dump.new_version
+
+  [
+    ['1K', 1_000, 1024],
+    ['10M', 10, 10 * 1024 * 1024],
+  ].each do |label, times, size|
+    datas = Array.new(times) do
+      urandom.read(size)
+    end.each
+    measure "#{label} strings", times do |n|
+      path = format('data%s%08d', label, n).scan(/.{1,2}/).join('/')
+      data = datas.next
+      builder.store(path, data)
+    end
+
+    files = Array.new(times) do |i|
+      path = File.join(dir, "file#{i}")
+      File.open(path, 'w') do |f|
+        f.write(urandom.read(size))
+      end
+      path
+    end.each
+    measure "#{label} files", times do |n|
+      path = format('file%s%08d', label, n).scan(/.{1,2}/).join('/')
+      file = files.next
+      builder.store_from(path, file)
+    end
+  end
+
+  measure 'commit', 10 do
+    builder.commit
+  end
+
+  measure 'read versions', 100 do
+    dump.versions
+  end
+
+  entries = dump.versions.first.each_recursive.to_a
+
+  measure 'read entries', entries.length do |n|
+    entries[n].read
+  end
+
+  measure 'read entries to file', entries.length do |n|
+    entries[n].write_to(File.join(dir, 'out'))
+  end
+end

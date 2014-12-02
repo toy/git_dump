@@ -1,4 +1,8 @@
-require 'git_dump/repo/git'
+begin
+  require 'git_dump/repo/rugged'
+rescue LoadError
+  require 'git_dump/repo/git'
+end
 require 'git_dump/cmd'
 require 'git_dump/version'
 require 'git_dump/version/builder'
@@ -7,7 +11,7 @@ class GitDump
   # Main class: create/initialize repository, find versions, provide interface
   # to git
   class Repo
-    include Git
+    include defined?(Rugged) ? Rugged : Git
 
     attr_reader :path
 

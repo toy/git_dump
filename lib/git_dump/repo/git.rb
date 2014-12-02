@@ -1,3 +1,5 @@
+require 'tempfile'
+
 class GitDump
   class Repo
     # Interface to git using system calls and pipes
@@ -94,16 +96,35 @@ class GitDump
       end
 
       # Return contents of blob identified by sha
-      def blob_read(sha)
-        blob_pipe(sha, &:read)
+      # If io is specified, then content will be written to io
+      def blob_read(sha, io = nil)
+        @blob_read_pipe ||= git(*%w[cat-file --batch]).popen('rb+')
+        @blob_read_pipe.puts(sha)
+        size = @blob_read_pipe.gets.split(' ')[2].to_i
+        result = if io
+          while size > 0
+            chunk = [size, 4096].min
+            io.write(@blob_read_pipe.read(chunk))
+            size -= chunk
+          end
+          io
+        else
+          @blob_read_pipe.read(size)
+        end
+        @blob_read_pipe.gets
+        result
       end
 
-      # Ruturn path to temp file with contents of blob identified by sha
-      # for moving to path
-      def blob_unpack_tmp(sha, path)
-        dir = File.dirname(path)
-        temp_name = git('unpack-file', sha, :chdir => dir).capture.strip
-        File.join(dir, temp_name)
+      # Write contents of blob to file at path and set its mode
+      def blob_unpack(sha, path, mode)
+        Tempfile.open('git_dump', File.dirname(path)) do |temp|
+          temp.binmode
+          blob_read(sha, temp)
+          temp.close
+
+          File.chmod(mode, temp.path)
+          File.rename(temp.path, path)
+        end
       end
 
       # Read tree at sha returning list of entries
@@ -185,8 +206,11 @@ class GitDump
           :sha => entry[:sha].to_s,
         }
 
-        base_mode = out[:type] == :tree ? 0o040_000 : 0o100_000
-        out[:mode] = (entry[:mode] || 0) & 0777 | base_mode
+        out[:mode] = if out[:type] == :tree
+          0o040_000
+        else
+          (entry[:mode] & 0100) == 0 ? 0o100_644 : 0o100_755
+        end
 
         unless out[:sha] =~ /\A[0-9a-f]{40}\z/
           fail "Expected sha1 hash, got #{out[:sha]}"

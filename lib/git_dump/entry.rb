@@ -21,9 +21,7 @@ class GitDump
 
     # Write to path
     def write_to(path)
-      temp_path = repo.blob_unpack_tmp(sha, path)
-      File.chmod(mode, temp_path)
-      File.rename(temp_path, path)
+      repo.blob_unpack(sha, path, mode)
     end
 
     def inspect

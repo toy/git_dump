@@ -169,6 +169,18 @@ describe GitDump do
 
         expect(builder['a'].read).to eq(data)
       end
+
+      it "does not change #{type} data read from file" do
+        path = File.join(tmp_dir, 'file.txt')
+        File.open(path, 'wb') do |f|
+          f.write(data)
+        end
+
+        builder = dump.new_version
+        builder.store_from('a', path)
+
+        expect(builder['a'].read).to eq(data)
+      end
     end
 
     describe :traversing do
