@@ -44,12 +44,10 @@ class GitDump
       # Return contents of blob identified by sha
       # If io is specified, then content will be written to io
       def blob_read(sha, io = nil)
-        content = ::Rugged::Object.new(repo, sha).content
         if io
-          io.write content
-          io
+          super(sha, io)
         else
-          content
+          ::Rugged::Object.new(repo, sha).content
         end
       end
 
