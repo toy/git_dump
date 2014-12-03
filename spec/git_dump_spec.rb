@@ -3,6 +3,14 @@ require 'git_dump'
 require 'tmpdir'
 
 describe GitDump do
+  around do |example|
+    Dir.mktmpdir do |dir|
+      @tmp_dir = dir
+      example.run
+    end
+  end
+  let(:tmp_dir){ @tmp_dir }
+
   def with_env(hash)
     saved = Hash[hash.map{ |key, _| [key, ENV[key]] }]
     begin
@@ -30,9 +38,7 @@ describe GitDump do
   }
 
   describe :new do
-    let(:tmp_dir){ Dir.mktmpdir }
     let(:path){ File.join(tmp_dir, 'dump') }
-    after{ FileUtils.remove_entry_secure tmp_dir }
 
     it 'initializes with bare git repo' do
       system('git', 'init', '-q', '--bare', path)
@@ -78,9 +84,7 @@ describe GitDump do
   end
 
   describe 'versions' do
-    let(:tmp_dir){ Dir.mktmpdir }
     let(:dump){ GitDump.new File.join(tmp_dir, 'dump'), :create => true }
-    after{ FileUtils.remove_entry_secure tmp_dir }
 
     it 'returns empty list for empty repo' do
       expect(dump.versions).to be_empty
