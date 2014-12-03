@@ -41,8 +41,8 @@ class GitDump
           GitDump.uuid,
         ]
 
-        commit_sha = repo.commit(tree.sha, :date => time)
-        tag_name = repo.tag(commit_sha, name_parts, :date => time)
+        commit_sha = repo.commit(tree.sha, :time => time)
+        tag_name = repo.tag(commit_sha, name_parts, :time => time)
         repo.gc(:auto => true)
 
         Version.new(repo, tag_name, commit_sha)

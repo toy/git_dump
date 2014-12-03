@@ -48,12 +48,12 @@ class GitDump
 
       # Create commit for tree_sha, return sha
       # options:
-      #   :date => author date (by default now)
+      #   :time => author date (by default now)
       #   :message => commit message (by default empty)
       def commit(tree_sha, options = {})
         env = {}
-        if options[:date]
-          env['GIT_AUTHOR_DATE'] = options[:date].strftime('%s %z')
+        if options[:time]
+          env['GIT_AUTHOR_DATE'] = options[:time].strftime('%s %z')
         end
 
         git('commit-tree', tree_sha, :env => env).popen('r+') do |f|
@@ -66,7 +66,7 @@ class GitDump
       # Create tag for commit_sha with name constructed from name_parts, return
       # name. name_parts can be an array or a string separated by /
       # options:
-      #   :date => tagger date
+      #   :time => tagger date
       #   :message => tag message (by default empty)
       def tag(commit_sha, name_parts, options = {})
         name_parts = name_parts.split('/') unless name_parts.is_a?(Array)
@@ -76,8 +76,8 @@ class GitDump
         end.reject(&:empty?).join('/')
 
         env = {}
-        if options[:date]
-          env['GIT_COMMITTER_DATE'] = options[:date].strftime('%s %z')
+        if options[:time]
+          env['GIT_COMMITTER_DATE'] = options[:time].strftime('%s %z')
         end
 
         args = %w[tag]
