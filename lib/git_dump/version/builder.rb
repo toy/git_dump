@@ -34,12 +34,8 @@ class GitDump
         time = options[:time] || Time.now
         tags = Array(options[:tags]).join(',')
 
-        name_parts = [
-          time.dup.utc.strftime('%Y-%m-%d_%H-%M-%S'),
-          GitDump.hostname,
-          tags,
-          GitDump.uuid,
-        ]
+        time_str = time.dup.utc.strftime('%Y-%m-%d_%H-%M-%S')
+        name_parts = [time_str, GitDump.hostname, tags, GitDump.uuid]
 
         commit_sha = repo.commit(tree.sha, :time => time)
         tag_name = repo.tag(commit_sha, name_parts, :time => time)
