@@ -83,10 +83,10 @@ describe GitDump do
     end
   end
 
-  describe 'versions' do
+  context do
     let(:dump){ GitDump.new File.join(tmp_dir, 'dump'), :create => true }
 
-    it 'returns empty list for empty repo' do
+    it 'returns empty list for empty repo versions' do
       expect(dump.versions).to be_empty
     end
 
@@ -113,7 +113,7 @@ describe GitDump do
       expect(version['should/not/be/there']).to be_nil
     end
 
-    it 'returns path and name' do
+    it 'returns path and name for trees and entries' do
       builder = dump.new_version
       builder['a/b/c'] = 'test'
 
@@ -136,7 +136,7 @@ describe GitDump do
       expect(builder['aa/fa'].read).to eq('test a')
     end
 
-    it 'replaces branches' do
+    it 'replaces tree branches' do
       builder = dump.new_version
       builder['a/a/a/a'] = 'test a'
       builder['a/a/a/b'] = 'test b'
@@ -203,7 +203,7 @@ describe GitDump do
         end
       end
 
-      it 'traverses entries recursievely' do
+      it 'traverses entries recursively' do
         expect(recursive_path_n_read(version)).to match_array([
           %w[a a],
           %w[b/a b\a],
