@@ -6,6 +6,12 @@ class GitDump
   class Version
     include Base
 
+    def self.list(repo)
+      repo.tag_entries.map do |entry|
+        Version.new(repo, entry[:name], entry[:sha])
+      end
+    end
+
     attr_reader :repo, :id, :sha
     def initialize(repo, id, sha)
       @repo, @id, @sha = repo, id, sha
