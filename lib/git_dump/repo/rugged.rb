@@ -75,6 +75,10 @@ class GitDump
           {
             :name => tag.name,
             :sha => tag.target.oid,
+            :author_time => tag.target.author[:time],
+            :commit_time => tag.target.committer[:time],
+            :tag_message => tag.annotation && tag.annotation.message,
+            :commit_message => tag.target.message,
           }
         end
       end

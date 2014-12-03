@@ -144,22 +144,30 @@ class GitDump
         end
       end
 
+      TAG_ENTRIES_FIELDS = %w[
+        %(objecttype)%00
+        %(objectname)%00
+        %(refname)%00
+        %(authordate:rfc2822)%(*authordate:rfc2822)%00
+        %(committerdate:rfc2822)%(*committerdate:rfc2822)%00
+        %(contents)%00
+        %(*contents)%00
+      ]
+
       # Return list of entries per tag ref
       # Each entry is a hash with following keys:
       #   :sha => tag or commit sha
       #   :name => ref name
       def tag_entries
-        format = '%(objectname) %(refname)'
-        cmd = git('for-each-ref', "--format=#{format}", 'refs/tags')
-        cmd.stripped_lines.map do |line|
-          if (m = %r!^([0-9a-f]{40}) refs/tags/(.*)$!.match(line))
-            {
-              :sha => m[1],
-              :name => m[2],
-            }
-          else
-            fail "Unexpected: #{line}"
-          end
+        ref_fields(TAG_ENTRIES_FIELDS, 'refs/tags').map do |values|
+          {
+            :sha => values[1],
+            :name => values[2].sub(%r{\Arefs/tags/}, ''),
+            :author_time => Time.rfc2822(values[3]),
+            :commit_time => Time.rfc2822(values[4]),
+            :tag_message => values[0] == 'tag' ? values[5] : nil,
+            :commit_message => values[0] == 'tag' ? values[6] : values[5],
+          }
         end
       end
 
@@ -217,6 +225,18 @@ class GitDump
         end
 
         out
+      end
+
+      def ref_fields(fields, pattern)
+        list = []
+        format = fields.join
+        git('for-each-ref', "--format=#{format}", pattern).popen do |io|
+          until io.eof?
+            list << Array.new(fields.length){ io.gets("\0").chomp("\0") }
+            io.gets
+          end
+        end
+        list
       end
 
       def transfer(command, url, id, options)
