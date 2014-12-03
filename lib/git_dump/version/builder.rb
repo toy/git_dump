@@ -35,7 +35,7 @@ class GitDump
         tags = Array(options[:tags]).join(',')
 
         name_parts = [
-          time.utc.strftime('%Y-%m-%d_%H-%M-%S'),
+          time.dup.utc.strftime('%Y-%m-%d_%H-%M-%S'),
           GitDump.hostname,
           tags,
           GitDump.uuid,
