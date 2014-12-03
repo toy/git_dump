@@ -6,7 +6,7 @@ class GitDump
     attr_reader :sha, :mode
     def initialize(repo, dir, name, sha, mode)
       super(repo, dir, name)
-      @sha, @mode = sha, mode & 0777
+      @sha, @mode = sha, (mode & 0100) == 0 ? 0644 : 0755
     end
 
     # Pipe for reading data
