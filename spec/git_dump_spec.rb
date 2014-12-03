@@ -90,6 +90,13 @@ describe GitDump do
       expect(dump.versions).to be_empty
     end
 
+    it 'creates version for every commit' do
+      builder = dump.new_version
+      3.times{ builder.commit }
+
+      expect(dump.versions.length).to eq(3)
+    end
+
     it 'sets and reads version time' do
       time = Time.parse('2000-10-20 12:34:56')
 
