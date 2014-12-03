@@ -259,6 +259,16 @@ describe GitDump do
 
           expect(File.stat(path).mode & 0777).to eq(mode)
         end
+
+        it "fixes mode to #{mode.to_s(8)}" do
+          builder = dump.new_version
+          builder.store('a', 'test', mode & 0100)
+
+          path = File.join(tmp_dir, 'file')
+          builder['a'].write_to(path)
+
+          expect(File.stat(path).mode & 0777).to eq(mode)
+        end
       end
     end
 
