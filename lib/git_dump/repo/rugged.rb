@@ -70,7 +70,7 @@ class GitDump
       # Each entry is a hash with following keys:
       #   :sha => tag or commit sha
       #   :name => ref name
-      def refs
+      def tag_entries
         repo.tags.map do |tag|
           {
             :name => tag.name,

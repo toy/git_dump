@@ -27,7 +27,7 @@ class GitDump
 
     # List of versions
     def versions
-      refs.map do |entry|
+      tag_entries.map do |entry|
         Version.new(self, entry[:name], entry[:sha])
       end
     end
