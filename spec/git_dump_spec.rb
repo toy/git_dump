@@ -90,6 +90,16 @@ describe GitDump do
       expect(dump.versions).to be_empty
     end
 
+    it 'sets and reads version time' do
+      time = Time.parse('2000-10-20 12:34:56')
+
+      builder = dump.new_version
+      built = builder.commit(:time => time)
+
+      expect(built.time).to eq(time)
+      expect(dump.versions.first.time).to eq(time)
+    end
+
     it 'creates and reads version' do
       builder = dump.new_version
       builder['string/x'] = 'test a'

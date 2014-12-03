@@ -8,13 +8,13 @@ class GitDump
 
     def self.list(repo)
       repo.tag_entries.map do |entry|
-        Version.new(repo, entry[:name], entry[:sha])
+        Version.new(repo, entry[:name], entry[:sha], entry[:author_time])
       end
     end
 
-    attr_reader :repo, :id, :sha
-    def initialize(repo, id, sha)
-      @repo, @id, @sha = repo, id, sha
+    attr_reader :repo, :id, :sha, :time
+    def initialize(repo, id, sha, time)
+      @repo, @id, @sha, @time = repo, id, sha, time
     end
 
     # Send this version to repo at url
