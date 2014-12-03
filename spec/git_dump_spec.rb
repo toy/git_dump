@@ -113,6 +113,18 @@ describe GitDump do
       expect(version['should/not/be/there']).to be_nil
     end
 
+    it 'removes version' do
+      builder = dump.new_version
+      builder['a'] = 'b'
+      built = builder.commit
+
+      expect(dump.versions.length).to eq(1)
+
+      built.remove
+
+      expect(dump.versions).to be_empty
+    end
+
     it 'returns path and name for trees and entries' do
       builder = dump.new_version
       builder['a/b/c'] = 'test'
@@ -304,18 +316,6 @@ describe GitDump do
 
         check_received_version
       end
-    end
-
-    it 'removes version' do
-      builder = dump.new_version
-      builder['a'] = 'b'
-      built = builder.commit
-
-      expect(dump.versions.length).to eq(1)
-
-      built.remove
-
-      expect(dump.versions).to be_empty
     end
   end
 end
