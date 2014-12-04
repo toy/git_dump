@@ -83,8 +83,7 @@ class GitDump
 
         args = %w[tag]
         args << '-F' << '-' << '--cleanup=verbatim' if options[:message]
-        args << name << commit_sha
-        args << {:env => env}
+        args << name << commit_sha << {:env => env}
 
         git(*args).popen('r+') do |f|
           f.puts options[:message] if options[:message]
