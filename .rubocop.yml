@@ -20,6 +20,9 @@ Metrics/PerceivedComplexity:
 Style/AccessModifierIndentation:
   EnforcedStyle: outdent
 
+Style/BracesAroundHashParameters:
+  Enabled: false
+
 Style/CaseIndentation:
   IndentWhenRelativeTo: end
 
