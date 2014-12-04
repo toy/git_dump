@@ -33,19 +33,15 @@ class GitDump
       #   :annotation - tag message
       #   :description - commit message
       def commit(options = {})
-        time = options[:time] || Time.now
-        tags = Array(options[:tags]).join(',')
-
-        time_str = time.dup.utc.strftime('%Y-%m-%d_%H-%M-%S')
-        name_parts = [time_str, GitDump.hostname, tags, GitDump.uuid]
+        options = {:time => Time.now}.merge(options)
 
         commit_sha = repo.commit(tree.sha, {
-          :time => time,
+          :time => options[:time],
           :message => options[:description],
         })
 
-        tag_name = repo.tag(commit_sha, name_parts, {
-          :time => time,
+        tag_name = repo.tag(commit_sha, name_parts(options), {
+          :time => options[:time],
           :message => options[:annotation],
         })
 
@@ -61,6 +57,15 @@ class GitDump
     private
 
       attr_reader :tree
+
+      def name_parts(options)
+        [
+          options[:time].dup.utc.strftime('%Y-%m-%d_%H-%M-%S'),
+          GitDump.hostname,
+          Array(options[:tags]).join(','),
+          GitDump.uuid,
+        ]
+      end
     end
   end
 end
