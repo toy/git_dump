@@ -56,6 +56,12 @@ class GitDump
         if options[:time]
           env['GIT_AUTHOR_DATE'] = options[:time].strftime('%s %z')
         end
+        if options[:name]
+          env['GIT_AUTHOR_NAME'] = env['GIT_COMMITTER_NAME'] = options[:name]
+        end
+        if options[:email]
+          env['GIT_AUTHOR_EMAIL'] = env['GIT_COMMITTER_EMAIL'] = options[:email]
+        end
 
         git('commit-tree', tree_sha, :env => env).popen('r+') do |f|
           f.puts options[:message] if options[:message]
@@ -75,6 +81,12 @@ class GitDump
         env = {}
         if options[:time]
           env['GIT_COMMITTER_DATE'] = options[:time].strftime('%s %z')
+        end
+        if options[:name]
+          env['GIT_COMMITTER_NAME'] = options[:name]
+        end
+        if options[:email]
+          env['GIT_COMMITTER_EMAIL'] = options[:email]
         end
 
         args = %w[tag]

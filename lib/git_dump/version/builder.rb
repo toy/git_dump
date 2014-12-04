@@ -32,18 +32,24 @@ class GitDump
       #   :tags - list of strings to associate with this version
       #   :annotation - tag message
       #   :description - commit message
+      #   :keep_identity - don't override identity with "git_dump
+      # gitdump@hostname"
       def commit(options = {})
         options = {:time => Time.now}.merge(options)
 
-        commit_sha = repo.commit(tree.sha, {
-          :time => options[:time],
-          :message => options[:description],
-        })
+        base = {:time => options[:time]}
+        unless options[:keep_identity]
+          base[:name] = 'git_dump'
+          base[:email] = "git_dump@#{GitDump.hostname}"
+        end
 
-        tag_name = repo.tag(commit_sha, name_parts(options), {
-          :time => options[:time],
+        commit_sha = repo.commit(tree.sha, base.merge({
+          :message => options[:description],
+        }))
+
+        tag_name = repo.tag(commit_sha, name_parts(options), base.merge({
           :message => options[:annotation],
-        })
+        }))
 
         repo.gc(:auto => true)
 
