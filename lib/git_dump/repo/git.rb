@@ -8,6 +8,24 @@ class GitDump
       # Exception during initialization
       class InitException < StandardError; end
 
+      def self.included(base)
+        base.extend(ClassMethods)
+      end
+
+      # Methods which work outside of git repository
+      module ClassMethods
+        # List remote tag names
+        def remote_tag_names(url)
+          Cmd.git('ls-remote', '--tags', url).stripped_lines.map do |line|
+            if (m = %r!^[0-9a-f]{40}\trefs/tags/(.*)$!.match(line))
+              m[1]
+            else
+              fail "Unexpected: #{line}"
+            end
+          end
+        end
+      end
+
       # Add blob for content to repository, return sha
       def data_sha(content)
         @data_sha_command ||= git(*%w[hash-object -w --no-filters --stdin])
@@ -180,17 +198,6 @@ class GitDump
         args = %W[tag --delete #{id}]
         args << {:no_stdout => true}
         git(*args).run
-      end
-
-      # List remote tag names
-      def remote_tag_names(url)
-        git('ls-remote', '--tags', url).stripped_lines.map do |line|
-          if (m = %r!^[0-9a-f]{40}\trefs/tags/(.*)$!.match(line))
-            m[1]
-          else
-            fail "Unexpected: #{line}"
-          end
-        end
       end
 
       # Receive tag with name id from repo at url

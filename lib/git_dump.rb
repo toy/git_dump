@@ -18,10 +18,16 @@ class GitDump
     :path,
     :new_version,
     :versions,
-    :remote_version_ids,
     :fetch,
     :gc,
   ]
+
+  class << self
+    # List remote version ids
+    def remote_version_ids(url)
+      Repo.remote_version_ids(url)
+    end
+  end
 
   # hostname as returned by `hostname` or `unknow`
   def self.hostname

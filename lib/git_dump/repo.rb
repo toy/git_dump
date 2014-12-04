@@ -13,6 +13,11 @@ class GitDump
   class Repo
     include defined?(Rugged) ? Rugged : Git
 
+    class << self
+      # List remote version ids
+      alias_method :remote_version_ids, :remote_tag_names
+    end
+
     attr_reader :path
 
     def initialize(path, options)
@@ -28,11 +33,6 @@ class GitDump
     # List of versions
     def versions
       Version.list(self)
-    end
-
-    # List remote version (tag) ids
-    def remote_version_ids(url)
-      remote_tag_names(url)
     end
 
     def inspect
