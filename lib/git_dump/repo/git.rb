@@ -77,11 +77,15 @@ class GitDump
         end
 
         args = %w[tag]
-        args << '-m' << options[:message] if options[:message]
+        args << '-F' << '-' if options[:message]
         args << name << commit_sha
         args << {:env => env}
 
-        git(*args).run
+        git(*args).popen('r+') do |f|
+          f.puts options[:message] if options[:message]
+          f.close_write
+          f.read.chomp
+        end
 
         name
       end
