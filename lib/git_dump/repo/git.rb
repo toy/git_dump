@@ -77,7 +77,7 @@ class GitDump
         end
 
         args = %w[tag]
-        args << '-F' << '-' if options[:message]
+        args << '-F' << '-' << '--cleanup=verbatim' if options[:message]
         args << name << commit_sha
         args << {:env => env}
 
