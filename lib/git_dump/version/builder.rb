@@ -41,7 +41,7 @@ class GitDump
         tag_name = repo.tag(commit_sha, name_parts, :time => time)
         repo.gc(:auto => true)
 
-        Version.new(repo, tag_name, commit_sha, time)
+        Version.by_id(repo, tag_name)
       end
 
       def inspect
