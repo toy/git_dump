@@ -10,33 +10,58 @@ gem install git_dump
 
 ## Usage
 
-Create version:
+Init:
 
 ```rb
 dump = GitDump.new('dump.git', :create => true)
+```
+
+Create version:
+
+```rb
 version = dump.new_version
 version['a/b/c'] = 'string'
-version.add('b/c/d', StringIO.new('string'), 0644)
-version.add('d/e', File.open('path'), 0755)
-version.add_file('e/f', 'path')
-version.commit
+version.store('b/c/d', StringIO.new('string'), 0644)
+version.store('d/e', File.open('path'), 0755)
+version.store_from('e/f', 'path')
+version.commit(:tags => 'test')
 ```
 
 Read version:
 
 ```rb
-dump = GitDump.new('dump.git')
 version = dump.versions.last
-version['a/b/c'].pipe{ |f| f.read }
+version['a/b/c'].open{ |f| f.read }
 version['a/b/c'].read
+version['a/b/c'].write_to('new_path')
 
-version.each do |entry|
-  entry.path
+version.each do |path_object|
+  path_object.path
 end
 
 version.each_recursive do |entry|
   entry.read
 end
+```
+
+Versions:
+
+```rb
+dump.versions.each do |version|
+  puts [version.id, version.time, version.commit_time].join(' ')
+end
+
+dump.versions.first.remove
+```
+
+Remote (url in any syntax supported by git including local paths):
+
+```rb
+ids = GitDump.remote_version_ids(url)
+
+dump.versions.last.push(url)
+
+dump.fetch(url, ids.first)
 ```
 
 ## Copyright
