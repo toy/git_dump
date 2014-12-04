@@ -69,11 +69,7 @@ class GitDump
       #   :time => tagger date
       #   :message => tag message (by default empty)
       def tag(commit_sha, name_parts, options = {})
-        name_parts = name_parts.split('/') unless name_parts.is_a?(Array)
-
-        name = name_parts.map do |part|
-          part.gsub(/[^a-zA-Z0-9\-_,]+/, '_')
-        end.reject(&:empty?).join('/')
+        name = tag_name_from_parts(name_parts)
 
         env = {}
         if options[:time]
@@ -225,6 +221,14 @@ class GitDump
         end
 
         out
+      end
+
+      def tag_name_from_parts(parts)
+        parts = parts.split('/') unless parts.is_a?(Array)
+
+        parts.map do |part|
+          part.gsub(/[^a-zA-Z0-9\-_,]+/, '_')
+        end.reject(&:empty?).join('/')
       end
 
       def ref_fields(fields, pattern)
