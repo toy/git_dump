@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'time'
 
 class GitDump
   class Repo
