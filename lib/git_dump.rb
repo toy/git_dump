@@ -3,10 +3,8 @@ require 'git_dump/repo'
 require 'forwardable'
 require 'securerandom'
 
-# Main interface
+# Main interface, most instance methods forwarded to Repo
 class GitDump
-  extend Forwardable
-
   # Initialize using existing repositiory
   # use `:create => true` or `:create => :bare` to create bare repo if missing
   # or `:create => :non_bare` for non bare one
@@ -14,13 +12,9 @@ class GitDump
     @repo = Repo.new(path, options)
   end
 
-  def_delegators :@repo, *[
-    :path,
-    :new_version,
-    :versions,
-    :fetch,
-    :gc,
-  ]
+  extend Forwardable
+
+  def_delegators :@repo, :path, :new_version, :versions, :fetch, :gc
 
   class << self
     # List remote version ids
@@ -29,7 +23,7 @@ class GitDump
     end
   end
 
-  # hostname as returned by `hostname` or `unknow`
+  # hostname as returned by `hostname` or "unknown"
   def self.hostname
     @hostname ||= begin
       hostname = `hostname`.chomp
