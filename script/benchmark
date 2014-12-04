@@ -41,7 +41,7 @@ Dir.mktmpdir do |dir|
     datas = Array.new(times) do
       urandom.read(size)
     end.each
-    measure "#{label} strings", times do |n|
+    measure "store #{label} strings", times do |n|
       path = format('data%s%08d', label, n).scan(/.{1,2}/).join('/')
       data = datas.next
       builder.store(path, data)
@@ -54,7 +54,7 @@ Dir.mktmpdir do |dir|
       end
       path
     end.each
-    measure "#{label} files", times do |n|
+    measure "store #{label} files", times do |n|
       path = format('file%s%08d', label, n).scan(/.{1,2}/).join('/')
       file = files.next
       builder.store_from(path, file)
@@ -75,7 +75,7 @@ Dir.mktmpdir do |dir|
     entries[n].read
   end
 
-  measure 'read entries to file', entries.length do |n|
+  measure 'read entries to disk', entries.length do |n|
     entries[n].write_to(File.join(dir, 'out'))
   end
 end
