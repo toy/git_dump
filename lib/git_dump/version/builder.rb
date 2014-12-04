@@ -30,6 +30,8 @@ class GitDump
       # Options:
       #   :time - set version time (tag and commit)
       #   :tags - list of strings to associate with this version
+      #   :annotation - tag message
+      #   :description - commit message
       def commit(options = {})
         time = options[:time] || Time.now
         tags = Array(options[:tags]).join(',')
@@ -37,8 +39,16 @@ class GitDump
         time_str = time.dup.utc.strftime('%Y-%m-%d_%H-%M-%S')
         name_parts = [time_str, GitDump.hostname, tags, GitDump.uuid]
 
-        commit_sha = repo.commit(tree.sha, :time => time)
-        tag_name = repo.tag(commit_sha, name_parts, :time => time)
+        commit_sha = repo.commit(tree.sha, {
+          :time => time,
+          :message => options[:description],
+        })
+
+        tag_name = repo.tag(commit_sha, name_parts, {
+          :time => time,
+          :message => options[:annotation],
+        })
+
         repo.gc(:auto => true)
 
         Version.by_id(repo, tag_name)

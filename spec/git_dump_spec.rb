@@ -154,6 +154,26 @@ describe GitDump do
       expect(dump.versions.first.commit_time).to be_between(from, to)
     end
 
+    it 'sets and reads version annotation' do
+      message = DATAS[:text] + File.read(__FILE__)
+
+      builder = dump.new_version
+      built = builder.commit(:annotation => message)
+
+      expect(built.annotation).to eq(message)
+      expect(dump.versions.first.annotation).to eq(message)
+    end
+
+    it 'sets and reads version description' do
+      message = DATAS[:text] + File.read(__FILE__)
+
+      builder = dump.new_version
+      built = builder.commit(:description => message)
+
+      expect(built.description).to eq(message)
+      expect(dump.versions.first.description).to eq(message)
+    end
+
     it 'creates and reads version' do
       builder = dump.new_version
       builder['string/x'] = 'test a'
