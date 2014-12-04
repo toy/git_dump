@@ -14,6 +14,7 @@ class GitDump
     attr_reader :args
     attr_reader :env
     attr_reader :chdir
+    attr_reader :no_stdin
     attr_reader :no_stdout
     attr_reader :no_stderr
 
@@ -33,6 +34,7 @@ class GitDump
         cmd = "export #{env_str}; #{cmd}"
       end
       cmd = "cd #{chdir}; #{cmd}" if chdir
+      cmd << ' < /dev/null' if no_stdin
       cmd << ' > /dev/null' if no_stdout
       cmd << ' 2> /dev/null' if no_stderr
       cmd
@@ -75,6 +77,7 @@ class GitDump
     def parse_options(options)
       @env = options.delete(:env).to_hash if options.key?(:env)
       @chdir = options.delete(:chdir).to_s if options.key?(:chdir)
+      @no_stdin = !!options.delete(:no_stdin) if options.key?(:no_stdin)
       @no_stdout = !!options.delete(:no_stdout) if options.key?(:no_stdout)
       @no_stderr = !!options.delete(:no_stderr) if options.key?(:no_stderr)
 
@@ -85,6 +88,7 @@ class GitDump
       return to_s if RUBY_VERSION < '1.9' || defined?(JRUBY_VERSION)
       options = {}
       options[:chdir] = chdir if chdir
+      options[:in] = '/dev/null' if no_stdin
       options[:out] = '/dev/null' if no_stdout
       options[:err] = '/dev/null' if no_stderr
       [env || {}] + args + [options]
