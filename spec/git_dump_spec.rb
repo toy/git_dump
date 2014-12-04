@@ -368,6 +368,15 @@ describe GitDump do
       end
     end
 
+    it 'gets remote version ids' do
+      builder = dump.new_version
+      3.times{ builder.commit }
+
+      other_dump = GitDump.new File.join(tmp_dir, 'other'), :create => true
+      expect(other_dump.remote_version_ids(dump.path)).
+        to eq(dump.versions.map(&:id))
+    end
+
     describe :exchange do
       let(:other_dump) do
         GitDump.new File.join(tmp_dir, 'other'), :create => true

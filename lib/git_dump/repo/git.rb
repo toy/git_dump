@@ -179,6 +179,17 @@ class GitDump
         git(*args).run
       end
 
+      # List remote tag names
+      def remote_tag_names(url)
+        git('ls-remote', '--tags', url).stripped_lines.map do |line|
+          if (m = %r!^[0-9a-f]{40}\trefs/tags/(.*)$!.match(line))
+            m[1]
+          else
+            fail "Unexpected: #{line}"
+          end
+        end
+      end
+
       # Receive tag with name id from repo at url
       # Use :progress => true to show progress
       def fetch(url, id, options = {})

@@ -30,6 +30,11 @@ class GitDump
       Version.list(self)
     end
 
+    # List remote version (tag) ids
+    def remote_version_ids(url)
+      remote_tag_names(url)
+    end
+
     def inspect
       "#<#{self.class} path=#{path}>"
     end
