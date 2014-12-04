@@ -79,7 +79,7 @@ class GitDump
         })
 
         git('commit-tree', tree_sha, :env => env).popen('r+') do |f|
-          f.puts options[:message] if options[:message]
+          f.write options[:message] || nil
           f.close_write
           f.read.chomp
         end
@@ -104,7 +104,7 @@ class GitDump
         args << name << commit_sha << {:env => env}
 
         git(*args).popen('r+') do |f|
-          f.puts options[:message] if options[:message]
+          f.write options[:message] || nil
           f.close_write
           f.read.chomp
         end
