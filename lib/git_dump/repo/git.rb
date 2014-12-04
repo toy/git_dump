@@ -52,16 +52,13 @@ class GitDump
       #   :time => author date (by default now)
       #   :message => commit message (by default empty)
       def commit(tree_sha, options = {})
-        env = {}
-        if options[:time]
-          env['GIT_AUTHOR_DATE'] = options[:time].strftime('%s %z')
-        end
-        if options[:name]
-          env['GIT_AUTHOR_NAME'] = env['GIT_COMMITTER_NAME'] = options[:name]
-        end
-        if options[:email]
-          env['GIT_AUTHOR_EMAIL'] = env['GIT_COMMITTER_EMAIL'] = options[:email]
-        end
+        env = git_env({
+          :author_date => options[:time],
+          :author_name => options[:name],
+          :author_email => options[:email],
+          :committer_name => options[:name],
+          :committer_email => options[:email],
+        })
 
         git('commit-tree', tree_sha, :env => env).popen('r+') do |f|
           f.puts options[:message] if options[:message]
@@ -78,16 +75,11 @@ class GitDump
       def tag(commit_sha, name_parts, options = {})
         name = tag_name_from_parts(name_parts)
 
-        env = {}
-        if options[:time]
-          env['GIT_COMMITTER_DATE'] = options[:time].strftime('%s %z')
-        end
-        if options[:name]
-          env['GIT_COMMITTER_NAME'] = options[:name]
-        end
-        if options[:email]
-          env['GIT_COMMITTER_EMAIL'] = options[:email]
-        end
+        env = git_env({
+          :committer_date => options[:time],
+          :committer_name => options[:name],
+          :committer_email => options[:email],
+        })
 
         args = %w[tag]
         args << '-F' << '-' << '--cleanup=verbatim' if options[:message]
@@ -229,6 +221,19 @@ class GitDump
       # Construct git command specifying git-dir
       def git(command, *args)
         Cmd.git("--git-dir=#{@git_dir}", command, *args)
+      end
+
+      def git_env(options)
+        env = {}
+        [:author, :committer].each do |role|
+          [:name, :email, :date].each do |part|
+            value = options[:"#{role}_#{part}"]
+            next unless value
+            value = value.strftime('%s %z') if part == :date
+            env["GIT_#{role}_#{part}".upcase] = value
+          end
+        end
+        env
       end
 
       def normalize_entry(entry)
