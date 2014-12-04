@@ -7,6 +7,10 @@ class GitDump
     module Rugged
       include Git
 
+      def self.included(base)
+        base.extend(ClassMethods)
+      end
+
       # Add blob for content to repository, return sha
       def data_sha(content)
         if content.respond_to?(:read)
