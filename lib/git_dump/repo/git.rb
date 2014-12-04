@@ -78,9 +78,15 @@ class GitDump
           :committer_email => options[:email],
         })
 
-        git('commit-tree', tree_sha, :env => env).popen('r+') do |f|
-          f.write options[:message] || nil
-          f.close_write
+        args = %w[commit-tree]
+        args << '-F' << '-' if options[:message]
+        args << tree_sha << {:env => env, :no_stdin => !options[:message]}
+
+        git(*args).popen(options[:message] ? 'r+' : 'r') do |f|
+          if options[:message]
+            f.write options[:message]
+            f.close_write
+          end
           f.read.chomp
         end
       end
@@ -103,9 +109,11 @@ class GitDump
         args << '-F' << '-' << '--cleanup=verbatim' if options[:message]
         args << name << commit_sha << {:env => env}
 
-        git(*args).popen('r+') do |f|
-          f.write options[:message] || nil
-          f.close_write
+        git(*args).popen(options[:message] ? 'r+' : 'r') do |f|
+          if options[:message]
+            f.write options[:message]
+            f.close_write
+          end
           f.read.chomp
         end
 
