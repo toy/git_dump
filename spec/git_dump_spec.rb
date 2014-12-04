@@ -144,6 +144,16 @@ describe GitDump do
       expect(dump.versions.first.time).to eq(time)
     end
 
+    it 'reads commit time' do
+      builder = dump.new_version
+      from = Time.at(Time.now.to_i) # round down to second
+      built = builder.commit(:time => Time.parse('2000-10-20 12:34:56'))
+      to = Time.now
+
+      expect(built.commit_time).to be_between(from, to)
+      expect(dump.versions.first.commit_time).to be_between(from, to)
+    end
+
     it 'creates and reads version' do
       builder = dump.new_version
       builder['string/x'] = 'test a'
