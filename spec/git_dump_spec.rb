@@ -11,27 +11,6 @@ describe GitDump do
   end
   let(:tmp_dir){ @tmp_dir }
 
-  def with_env(hash)
-    saved = Hash[hash.map{ |key, _| [key, ENV[key]] }]
-    begin
-      hash.each{ |key, value| ENV[key] = value }
-      yield
-    ensure
-      saved.each{ |key, value| ENV[key] = value }
-    end
-  end
-
-  ADD_ENV = {
-    'GIT_AUTHOR_NAME' => 'rspec',
-    'GIT_AUTHOR_EMAIL' => 'rspec@test',
-    'GIT_COMMITTER_NAME' => 'rspec',
-    'GIT_COMMITTER_EMAIL' => 'rspec@test',
-  }
-
-  around do |example|
-    with_env(ADD_ENV, &example)
-  end
-
   DATAS = {
     :text => "\r\n\r\nline\nline\rline\r\nline\n\rline\r\n\r\n",
     :binary => 256.times.sort_by{ rand }.pack('C*'),
