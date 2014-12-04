@@ -97,6 +97,43 @@ describe GitDump do
       expect(dump.versions.length).to eq(3)
     end
 
+    it 'builds id from time, hostname and uuid' do
+      allow(GitDump).to receive(:hostname).and_return('ivans')
+      time = Time.utc(2000, 10, 20, 12, 34, 56)
+
+      builder = dump.new_version
+      built = builder.commit(:time => time)
+
+      expect(built.id).to match(%r{
+        \A
+          2000-10-20_12-34-56
+        /
+          ivans
+        /
+          (?i:
+            [0-9a-f]{8}-
+            [0-9a-f]{4}-
+            4[0-9a-f]{3}-
+            [89ab][0-9a-f]{3}-
+            [0-9a-f]{12}
+          )
+        \z
+      }x)
+    end
+
+    [
+      'hello,world,foo,bar_',
+      %w[hello world foo bar_],
+      'hello,world,foo,bar!@#$%^&*()',
+    ].each do |tags|
+      it 'puts tags in name' do
+        builder = dump.new_version
+        built = builder.commit(:tags => tags)
+
+        expect(built.id.split('/')).to include('hello,world,foo,bar_')
+      end
+    end
+
     it 'sets and reads version time' do
       time = Time.parse('2000-10-20 12:34:56')
 
