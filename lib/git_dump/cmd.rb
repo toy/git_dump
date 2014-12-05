@@ -7,17 +7,35 @@ class GitDump
     # Non succesfull exit code
     class Failure < StandardError; end
 
+    # Run git command
     def self.git(*args)
       new(:git, *args)
     end
 
+    # Command arguments
     attr_reader :args
+
+    # Environment variables to set for command
     attr_reader :env
+
+    # Working dir for running command
     attr_reader :chdir
+
+    # Pipe /dev/null to stdin
     attr_reader :no_stdin
+
+    # Redirect stdout to /dev/null
     attr_reader :no_stdout
+
+    # Redirect stderr to /dev/null
     attr_reader :no_stderr
 
+    # Construct command, last argument can be a hash of options with keys:
+    #   :env - hash of environment varibles
+    #   :chdir - working dir for running command
+    #   :no_stdin - pipe /dev/null to stdin
+    #   :no_stdout - redirect stdout to /dev/null
+    #   :no_stderr - redirect stderr to /dev/null
     def initialize(*args)
       args = args.dup
       options = args.pop if args.last.is_a?(Hash)
@@ -74,6 +92,7 @@ class GitDump
 
   private
 
+    # Parse options hash, fail on unknown options
     def parse_options(options)
       @env = options.delete(:env).to_hash if options.key?(:env)
       @chdir = options.delete(:chdir).to_s if options.key?(:chdir)
@@ -84,6 +103,8 @@ class GitDump
       fail "Unknown options: #{options.inspect}" unless options.empty?
     end
 
+    # For ruby < 1.9 and jruby use to_s, otherwise return args with env hash
+    # prepanded and options hash appended
     def arguments
       return to_s if RUBY_VERSION < '1.9' || defined?(JRUBY_VERSION)
       options = {}
