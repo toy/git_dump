@@ -72,4 +72,4 @@ dump.fetch(url, ids.first)
 
 ## Copyright
 
-Copyright (c) 2012 Ivan Kuchin. See LICENSE.txt for details.
+Copyright (c) 2012-2014 Ivan Kuchin. See LICENSE.txt for details.
