@@ -76,6 +76,17 @@ class GitDump
       end
     end
 
+    # Write input to pipe and return output
+    def pipe(input)
+      popen(input ? 'r+' : 'r') do |f|
+        if input
+          f.write input
+          f.close_write
+        end
+        f.read
+      end
+    end
+
     # Capture output
     def capture
       popen(&:read)
