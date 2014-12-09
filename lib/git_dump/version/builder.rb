@@ -10,6 +10,8 @@ class GitDump
 
       attr_reader :repo
       def initialize(repo)
+        fail ArgumentError, 'Expected Repo' unless repo.is_a?(Repo)
+
         @repo = repo
         @tree = Tree::Builder.new(repo, nil, nil)
       end

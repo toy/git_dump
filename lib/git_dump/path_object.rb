@@ -3,6 +3,8 @@ class GitDump
   class PathObject
     attr_reader :repo, :path, :name
     def initialize(repo, dir, name)
+      fail ArgumentError, 'Expected Repo' unless repo.is_a?(Repo)
+
       @repo = repo
       @path = dir ? "#{dir}/#{name}" : name if name
       @name = name
