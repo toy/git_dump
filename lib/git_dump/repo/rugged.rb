@@ -45,6 +45,11 @@ class GitDump
         builder.write(repo)
       end
 
+      # Return size of object identified by sha
+      def size(sha)
+        ::Rugged::Object.new(repo, sha).size
+      end
+
       # Return contents of blob identified by sha
       # If io is specified, then content will be written to io
       def blob_read(sha, io = nil)

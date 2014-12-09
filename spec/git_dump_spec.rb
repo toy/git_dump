@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'spec_helper'
 require 'git_dump'
 require 'tmpdir'
@@ -199,6 +201,23 @@ describe GitDump do
       ].each do |path|
         expect(builder[path].path).to eq(path)
         expect(builder[path].name).to eq(path.split('/').last)
+      end
+    end
+
+    it 'returns size for entries' do
+      datas = [
+        '',
+        '1',
+        '᚛᚛ᚉᚑᚅᚔᚉᚉᚔᚋ ᚔᚈᚔ ᚍᚂᚐᚅᚑ ᚅᚔᚋᚌᚓᚅᚐ᚜',
+      ] + DATAS.values
+
+      builder = dump.new_version
+      datas.each_with_index do |data, i|
+        builder["a/path/#{i}"] = data
+      end
+
+      datas.each_with_index do |data, i|
+        expect(builder["a/path/#{i}"].size).to eq(data.bytesize)
       end
     end
 

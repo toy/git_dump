@@ -9,6 +9,11 @@ class GitDump
       @sha, @mode = sha, (mode & 0100) == 0 ? 0644 : 0755
     end
 
+    # Get size
+    def size
+      @size ||= repo.size(sha)
+    end
+
     # Pipe for reading data
     def open(&block)
       repo.blob_pipe(sha, &block)

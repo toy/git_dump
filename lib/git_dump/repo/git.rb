@@ -108,6 +108,13 @@ class GitDump
         name
       end
 
+      # Return size of object identified by sha
+      def size(sha)
+        @size_pipe ||= git(*%w[cat-file --batch-check]).popen('r+')
+        @size_pipe.puts(sha)
+        @size_pipe.gets.split(' ')[2].to_i
+      end
+
       # Return pipe with contents of blob identified by sha
       def blob_pipe(sha, &block)
         git('cat-file', 'blob', sha).popen('rb', &block)
