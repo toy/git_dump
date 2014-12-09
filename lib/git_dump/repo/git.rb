@@ -29,7 +29,7 @@ class GitDump
       # Add blob for content to repository, return sha
       def data_sha(content)
         @data_sha_command ||= git(*%w[hash-object -w --no-filters --stdin])
-        @data_sha_command.popen('r+') do |f|
+        @data_sha_command.popen('rb+') do |f|
           if content.respond_to?(:read)
             f.write(content.read(4096)) until content.eof?
           else
