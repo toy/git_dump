@@ -173,8 +173,8 @@ describe GitDump do
 
       expect(version['string/x'].read).to eq('test a')
       expect(version['stringio/x'].read).to eq('test b')
-      expect(version['io/x'].read).to eq(File.read(__FILE__))
-      expect(version['path/x'].read).to eq(File.read(__FILE__))
+      expect(version['io/x'].read).to eq(File.open(__FILE__, 'rb', &:read))
+      expect(version['path/x'].read).to eq(File.open(__FILE__, 'rb', &:read))
       expect(version['should/not/be/there']).to be_nil
     end
 
