@@ -2,7 +2,7 @@
 [![Build Status](https://img.shields.io/travis/toy/git_dump/master.svg?style=flat)](https://travis-ci.org/toy/git_dump)
 [![Code Climate](https://img.shields.io/codeclimate/github/toy/git_dump.svg?style=flat)](https://codeclimate.com/github/toy/git_dump)
 [![Dependency Status](https://img.shields.io/gemnasium/toy/git_dump.svg?style=flat)](https://gemnasium.com/toy/git_dump)
-[![Inch CI](http://inch-ci.org/github/toy/git_dump.svg?branch=master&style=flat)](http://inch-ci.org/github/toy/git_dump)
+[![Inch CI](https://inch-ci.org/github/toy/git_dump.svg?branch=master&style=flat)](https://inch-ci.org/github/toy/git_dump)
 
 # git_dump
 
