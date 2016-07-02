@@ -18,7 +18,7 @@ class GitDump
 
       # Store data `content` with mode `mode` at `path`
       # Pass `nil` as content to remove
-      def store(path, content, mode = 0644)
+      def store(path, content, mode = 0o644)
         tree.store(path, content, mode)
       end
       alias_method :[]=, :store

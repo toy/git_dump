@@ -47,7 +47,7 @@ class GitDump
 
       def parse_path(path)
         path = Array(path).join('/') unless path.is_a?(String)
-        path.scan(/[^\/]+/)
+        path.scan(%r{[^/]+})
       end
     end
   end

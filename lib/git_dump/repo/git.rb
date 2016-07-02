@@ -177,7 +177,7 @@ class GitDump
         %(committerdate:rfc2822)%(*committerdate:rfc2822)%00
         %(contents)%00
         %(*contents)%00
-      ]
+      ].freeze
 
       # Return list of entries per tag ref
       # Each entry is a hash with following keys:
@@ -255,7 +255,7 @@ class GitDump
         out[:mode] = if out[:type] == :tree
           0o040_000
         else
-          (entry[:mode] & 0100) == 0 ? 0o100_644 : 0o100_755
+          (entry[:mode] & 0o100) == 0 ? 0o100_644 : 0o100_755
         end
 
         unless out[:sha] =~ /\A[0-9a-f]{40}\z/

@@ -6,7 +6,7 @@ class GitDump
     attr_reader :sha, :mode
     def initialize(repo, dir, name, sha, mode)
       super(repo, dir, name)
-      @sha, @mode = sha, (mode & 0100) == 0 ? 0644 : 0755
+      @sha, @mode = sha, (mode & 0o100) == 0 ? 0o644 : 0o755
     end
 
     # Get size

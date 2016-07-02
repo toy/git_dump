@@ -14,7 +14,7 @@ class GitDump
 
       # Store data `content` with mode `mode` at `path`
       # Pass `nil` as content to remove
-      def store(path, content, mode = 0644)
+      def store(path, content, mode = 0o644)
         put_at(parse_path(path), content && repo.data_sha(content), mode)
       end
       alias_method :[]=, :store

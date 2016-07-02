@@ -8,7 +8,7 @@ require 'git_dump'
 require 'benchmark'
 require 'tmpdir'
 
-def measure(label, number = nil, &block)
+def measure(label, number = nil)
   label = "#{label} x#{number}" if number
   label = "#{label}:"
 
@@ -16,7 +16,7 @@ def measure(label, number = nil, &block)
   print label.ljust(30)
   times = Benchmark.measure do
     (number || 1).times do |n|
-      result = block.call(n)
+      result = yield n
     end
   end
   puts " #{times}"

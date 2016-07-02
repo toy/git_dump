@@ -27,8 +27,8 @@ Create version:
 ```rb
 version = dump.new_version
 version['a/b/c'] = 'string'
-version.store('b/c/d', StringIO.new('string'), 0644)
-version.store('d/e', File.open('path'), 0755)
+version.store('b/c/d', StringIO.new('string'), 0o644)
+version.store('d/e', File.open('path'), 0o755)
 version.store_from('e/f', 'path')
 version.commit(:tags => 'test')
 ```

@@ -16,7 +16,7 @@ describe GitDump do
   DATAS = {
     :text => "\r\n\r\nline\nline\rline\r\nline\n\rline\r\n\r\n",
     :binary => 256.times.sort_by{ rand }.pack('C*'),
-  }
+  }.freeze
 
   describe :new do
     let(:path){ File.join(tmp_dir, 'dump') }
@@ -158,8 +158,8 @@ describe GitDump do
     it 'creates and reads version' do
       builder = dump.new_version
       builder['string/x'] = 'test a'
-      builder.store('stringio/x', StringIO.new('test b'), 0644)
-      builder.store('io/x', File.open(__FILE__), 0755)
+      builder.store('stringio/x', StringIO.new('test b'), 0o644)
+      builder.store('io/x', File.open(__FILE__), 0o755)
       builder.store_from('path/x', __FILE__)
       built = builder.commit
 
@@ -343,7 +343,7 @@ describe GitDump do
         end
       end
 
-      [0644, 0755].each do |mode|
+      [0o644, 0o755].each do |mode|
         it "sets mode to #{mode.to_s(8)}" do
           builder = dump.new_version
           builder.store('a', 'test', mode)
@@ -351,17 +351,17 @@ describe GitDump do
           path = File.join(tmp_dir, 'file')
           builder['a'].write_to(path)
 
-          expect(File.stat(path).mode & 0777).to eq(mode)
+          expect(File.stat(path).mode & 0o777).to eq(mode)
         end
 
         it "fixes mode to #{mode.to_s(8)}" do
           builder = dump.new_version
-          builder.store('a', 'test', mode & 0100)
+          builder.store('a', 'test', mode & 0o100)
 
           path = File.join(tmp_dir, 'file')
           builder['a'].write_to(path)
 
-          expect(File.stat(path).mode & 0777).to eq(mode)
+          expect(File.stat(path).mode & 0o777).to eq(mode)
         end
       end
     end
