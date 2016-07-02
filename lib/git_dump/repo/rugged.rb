@@ -32,7 +32,7 @@ class GitDump
       #   :sha  => sha of content
       #   :mode => last three octets of mode
       def treeify(entries)
-        builder = ::Rugged::Tree::Builder.new
+        builder = ::Rugged::Tree::Builder.new(repo)
         entries.map do |entry|
           entry = normalize_entry(entry)
           builder << {
@@ -42,7 +42,7 @@ class GitDump
             :filemode => entry[:mode],
           }
         end
-        builder.write(repo)
+        builder.write
       end
 
       # Return size of object identified by sha
