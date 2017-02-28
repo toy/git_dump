@@ -17,11 +17,9 @@ class GitDump
         # List remote tag names
         def remote_tag_names(url)
           Cmd.git('ls-remote', '--tags', url).stripped_lines.map do |line|
-            if (m = %r!^[0-9a-f]{40}\trefs/tags/(.*)$!.match(line))
-              m[1]
-            else
-              fail "Unexpected: #{line}"
-            end
+            m = %r!^[0-9a-f]{40}\trefs/tags/(.*)$!.match(line)
+            fail "Unexpected: #{line}" unless m
+            m[1]
           end
         end
       end
@@ -156,16 +154,14 @@ class GitDump
       # Each entry is a hash like one for treeify
       def tree_entries(sha)
         git('ls-tree', sha).stripped_lines.map do |line|
-          if (m = /^(\d{6}) (blob|tree) ([0-9a-f]{40})\t(.*)$/.match(line))
-            {
-              :mode => m[1].to_i(8),
-              :type => m[2].to_sym,
-              :sha => m[3],
-              :name => m[4],
-            }
-          else
-            fail "Unexpected: #{line}"
-          end
+          m = /^(\d{6}) (blob|tree) ([0-9a-f]{40})\t(.*)$/.match(line)
+          fail "Unexpected: #{line}" unless m
+          {
+            :mode => m[1].to_i(8),
+            :type => m[2].to_sym,
+            :sha => m[3],
+            :name => m[4],
+          }
         end
       end
 
