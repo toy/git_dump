@@ -17,8 +17,9 @@ matrix:
     - env: RUBOCOP=✓
       rvm: '2'
       script: bundle exec rubocop
-    - env: BENCHMARK=✓ DRIVER=rugged
+    - env: BENCHMARK=✓
       rvm: '2'
+      install: DRIVER=rugged bundle install --jobs=3 --retry=3
       script:
         - DRIVER=git bundle exec script/benchmark
         - DRIVER=rugged bundle exec script/benchmark
