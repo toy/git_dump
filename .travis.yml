@@ -10,32 +10,32 @@ rvm:
   - 'jruby-9.1.5.0'
 script: bundle exec rspec
 env:
-  - RUGGED=0
-  - RUGGED=1
+  - DRIVER=git
+  - DRIVER=rugged
 matrix:
   include:
     - env: RUBOCOP=✓
       rvm: '2'
       script: bundle exec rubocop
-    - env: BENCHMARK=✓ RUGGED=1
+    - env: BENCHMARK=✓ DRIVER=rugged
       rvm: '2'
       script:
-        - RUGGED=0 bundle exec script/benchmark
-        - RUGGED=1 bundle exec script/benchmark
+        - DRIVER=git bundle exec script/benchmark
+        - DRIVER=rugged bundle exec script/benchmark
     - env: CHECK_RUBIES=✓
       rvm: '2'
       script: bundle exec travis_check_rubies
   exclude:
     - rvm: '1.9.3-p551'
-      env: RUGGED=1
+      env: DRIVER=rugged
     - rvm: 'jruby-1.7.26'
-      env: RUGGED=1
+      env: DRIVER=rugged
     - rvm: 'jruby-9.0.5.0'
-      env: RUGGED=1
+      env: DRIVER=rugged
     - rvm: 'jruby-9.1.5.0'
-      env: RUGGED=1
+      env: DRIVER=rugged
   allow_failures:
     - rvm: 'jruby-9.0.5.0'
-      env: RUGGED=0
+      env: DRIVER=git
     - rvm: 'jruby-9.1.5.0'
-      env: RUGGED=0
+      env: DRIVER=git
