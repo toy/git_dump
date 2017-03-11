@@ -15,17 +15,17 @@ env:
 matrix:
   include:
     - env: RUBOCOP=✓
-      rvm: '2'
+      rvm: '2.4.0'
       script: bundle exec rubocop
     - env: BENCHMARK=✓
-      rvm: '2'
+      rvm: '2.4.0'
       install: DRIVER=rugged bundle install --jobs=3 --retry=3
       script:
         - DRIVER=git bundle exec script/benchmark
         - DRIVER=rugged bundle exec script/benchmark
     - env: CHECK_RUBIES=✓
-      rvm: '2'
-      script: bundle exec travis_check_rubies
+      rvm: '2.4.0'
+      script: bundle exec travis_check_rubies --exclude 2.0,2.1
   exclude:
     - rvm: '1.9.3-p551'
       env: DRIVER=rugged
