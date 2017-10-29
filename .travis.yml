@@ -25,7 +25,7 @@ matrix:
         - DRIVER=rugged bundle exec script/benchmark
     - env: CHECK_RUBIES=✓
       rvm: '2.4.0'
-      script: bundle exec travis_check_rubies --exclude 2.0,2.1
+      script: bundle exec travis_check_rubies
   exclude:
     - rvm: '1.9.3-p551'
       env: DRIVER=rugged
