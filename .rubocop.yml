@@ -2,6 +2,27 @@ AllCops:
   Exclude:
     - '*.gemspec'
 
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+
+Layout/IndentArray:
+  EnforcedStyle: consistent
+
+Layout/IndentHash:
+  EnforcedStyle: consistent
+
+Layout/SpaceBeforeBlockBraces:
+  EnforcedStyle: no_space
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
 Lint/EndAlignment:
   EnforcedStyleAlignWith: variable
 
@@ -28,38 +49,23 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Max: 8
 
-Style/AccessModifierIndentation:
-  EnforcedStyle: outdent
-
 Style/Alias:
   EnforcedStyle: prefer_alias_method
 
 Style/BracesAroundHashParameters:
   Enabled: false
 
-Style/CaseIndentation:
-  EnforcedStyle: end
-
-Style/DotPosition:
-  EnforcedStyle: trailing
-
 Style/DoubleNegation:
   Enabled: false
 
 Style/Encoding:
-  EnforcedStyle: when_needed
+  Enabled: false
 
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
 
 Style/IfUnlessModifier:
   MaxLineLength: 40
-
-Style/IndentArray:
-  EnforcedStyle: consistent
-
-Style/IndentHash:
-  EnforcedStyle: consistent
 
 Style/ParallelAssignment:
   Enabled: false
@@ -74,12 +80,6 @@ Style/Semicolon:
 
 Style/SignalException:
   EnforcedStyle: semantic
-
-Style/SpaceBeforeBlockBraces:
-  EnforcedStyle: no_space
-
-Style/SpaceInsideHashLiteralBraces:
-  EnforcedStyle: no_space
 
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: no_comma

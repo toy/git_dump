@@ -230,11 +230,11 @@ class GitDump
 
       def git_env(options)
         env = {}
-        [:author, :committer].each do |role|
-          [:name, :email, :date].each do |part|
+        %w[author committer].each do |role|
+          %w[name email date].each do |part|
             value = options[:"#{role}_#{part}"]
             next unless value
-            value = value.strftime('%s %z') if part == :date
+            value = value.strftime('%s %z') if part == 'date'
             env["GIT_#{role}_#{part}".upcase] = value
           end
         end

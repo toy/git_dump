@@ -14,7 +14,7 @@ class GitDump
       # block given
       def each(&block)
         return to_enum(:each) unless block
-        @entries.each do |_, entry|
+        @entries.each_value do |entry|
           block[entry]
         end
       end
@@ -23,7 +23,7 @@ class GitDump
       # given
       def each_recursive(&block)
         return to_enum(:each_recursive) unless block
-        @entries.each do |_, entry|
+        @entries.each_value do |entry|
           if entry.is_a?(Entry)
             block[entry]
           else
