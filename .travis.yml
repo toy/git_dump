@@ -2,9 +2,9 @@ sudo: false
 language: ruby
 rvm:
   - '1.9.3-p551'
-  - '2.2.8'
-  - '2.3.5'
-  - '2.4.2'
+  - '2.2.9'
+  - '2.3.6'
+  - '2.4.3'
   - 'jruby-1.7.26'
   - 'jruby-9.0.5.0'
   - 'jruby-9.1.9.0'
@@ -18,16 +18,16 @@ env:
 matrix:
   include:
     - env: RUBOCOP=✓
-      rvm: '2.4.2'
+      rvm: '2.4.3'
       script: bundle exec rubocop
     - env: BENCHMARK=✓
-      rvm: '2.4.2'
+      rvm: '2.4.3'
       install: DRIVER=rugged bundle install --jobs=3 --retry=3
       script:
         - DRIVER=git bundle exec script/benchmark
         - DRIVER=rugged bundle exec script/benchmark
     - env: CHECK_RUBIES=✓
-      rvm: '2.4.2'
+      rvm: '2.4.3'
       script: bundle exec travis_check_rubies
   exclude:
     - rvm: '1.9.3-p551'
