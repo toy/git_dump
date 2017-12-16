@@ -26,6 +26,9 @@ Layout/SpaceInsideHashLiteralBraces:
 Lint/EndAlignment:
   EnforcedStyleAlignWith: variable
 
+Lint/NestedPercentLiteral:
+  Enabled: false
+
 Lint/UnneededSplatExpansion:
   Enabled: false
 
@@ -61,11 +64,14 @@ Style/DoubleNegation:
 Style/Encoding:
   Enabled: false
 
+Style/FormatStringToken:
+  Enabled: false
+
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
 
 Style/IfUnlessModifier:
-  MaxLineLength: 40
+  Enabled: false
 
 Style/ParallelAssignment:
   Enabled: false
