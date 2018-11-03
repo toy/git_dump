@@ -14,6 +14,7 @@ class GitDump
       # block given
       def each(&block)
         return to_enum(:each) unless block
+
         @entries.each_value do |entry|
           block[entry]
         end
@@ -23,6 +24,7 @@ class GitDump
       # given
       def each_recursive(&block)
         return to_enum(:each_recursive) unless block
+
         @entries.each_value do |entry|
           if entry.is_a?(Entry)
             block[entry]
@@ -36,6 +38,7 @@ class GitDump
 
       def get_at(parts)
         return unless (entry = @entries[parts.first])
+
         if parts.length == 1
           entry
         elsif entry.is_a?(self.class)

@@ -291,8 +291,8 @@ describe GitDump do
         builder
       end
 
-      def recursive_path_n_read(o)
-        o.each_recursive.map do |entry|
+      def recursive_path_n_read(obj)
+        obj.each_recursive.map do |entry|
           [entry.path, entry.read]
         end
       end

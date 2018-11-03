@@ -62,6 +62,7 @@ class GitDump
     def run
       success = system(*arguments)
       return true if success
+
       fail Failure, "`#{self}` failed with #{$CHILD_STATUS.exitstatus}"
     end
 
@@ -70,6 +71,7 @@ class GitDump
       if block
         result = IO.popen(arguments, mode, &block)
         return result if $CHILD_STATUS.success?
+
         fail Failure, "`#{self}` failed with #{$CHILD_STATUS.exitstatus}"
       else
         IO.popen(arguments, mode)
@@ -118,6 +120,7 @@ class GitDump
     # prepanded and options hash appended
     def arguments
       return to_s if RUBY_VERSION < '1.9' || defined?(JRUBY_VERSION)
+
       options = {}
       options[:chdir] = chdir if chdir
       options[:in] = '/dev/null' if no_stdin

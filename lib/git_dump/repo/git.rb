@@ -19,6 +19,7 @@ class GitDump
           Cmd.git('ls-remote', '--tags', url).stripped_lines.map do |line|
             m = %r!^[0-9a-f]{40}\trefs/tags/(.*)$!.match(line)
             fail "Unexpected: #{line}" unless m
+
             m[1]
           end
         end
@@ -156,6 +157,7 @@ class GitDump
         git('ls-tree', sha).stripped_lines.map do |line|
           m = /^(\d{6}) (blob|tree) ([0-9a-f]{40})\t(.*)$/.match(line)
           fail "Unexpected: #{line}" unless m
+
           {
             :mode => m[1].to_i(8),
             :type => m[2].to_sym,
@@ -234,6 +236,7 @@ class GitDump
           %w[name email date].each do |part|
             value = options[:"#{role}_#{part}"]
             next unless value
+
             value = value.strftime('%s %z') if part == 'date'
             env["GIT_#{role}_#{part}".upcase] = value
           end
