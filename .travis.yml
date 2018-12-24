@@ -10,6 +10,10 @@ rvm:
   - 'jruby-9.0.5.0'
   - 'jruby-9.1.9.0'
 script: bundle exec rspec
+before_install:
+  - gem install bundler
+  - ruby -e 'require "rubygems"; require "bundler/inline"; gemfile{ source "https://rubygems.org"; gem "rubygems-update" }' # get compatible version of rubygems-update
+  - gem update --system
 env:
   - DRIVER=git
   - DRIVER=rugged
