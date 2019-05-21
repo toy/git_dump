@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GitDump
   class Version
     # Common methods in Version and Builder

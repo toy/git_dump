@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'git_dump/path_object'
 
 class GitDump
@@ -6,7 +8,7 @@ class GitDump
     attr_reader :sha, :mode
     def initialize(repo, dir, name, sha, mode)
       super(repo, dir, name)
-      @sha, @mode = sha, (mode & 0o100).zero? ? 0o644 : 0o755
+      @sha, @mode = sha, (mode & 0o100) == 0 ? 0o644 : 0o755
     end
 
     # Get size

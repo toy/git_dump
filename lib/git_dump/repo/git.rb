@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tempfile'
 require 'time'
 
@@ -254,7 +256,7 @@ class GitDump
         out[:mode] = if out[:type] == :tree
           0o040_000
         else
-          (entry[:mode] & 0o100).zero? ? 0o100_644 : 0o100_755
+          (entry[:mode] & 0o100) == 0 ? 0o100_644 : 0o100_755
         end
 
         unless out[:sha] =~ /\A[0-9a-f]{40}\z/

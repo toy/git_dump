@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 begin
   require 'git_dump/repo/rugged'
 rescue LoadError

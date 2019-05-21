@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'git_dump/path_object'
 require 'git_dump/tree/base'
 require 'git_dump/entry'

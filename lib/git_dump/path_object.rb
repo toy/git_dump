@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GitDump
   # Base class for Tree, Tree::Builder and Entry
   class PathObject

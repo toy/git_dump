@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'shellwords'
 require 'English'
 
@@ -46,16 +48,16 @@ class GitDump
 
     # Construct command string
     def to_s
-      cmd = args.shelljoin
+      parts = [args.shelljoin]
       if env
         env_str = env.map{ |k, v| "#{k}=#{v}" }.shelljoin
-        cmd = "export #{env_str}; #{cmd}"
+        parts.unshift "export #{env_str};"
       end
-      cmd = "cd #{chdir}; #{cmd}" if chdir
-      cmd << ' < /dev/null' if no_stdin
-      cmd << ' > /dev/null' if no_stdout
-      cmd << ' 2> /dev/null' if no_stderr
-      cmd
+      parts.unshift "cd #{chdir};" if chdir
+      parts.push '< /dev/null' if no_stdin
+      parts.push '> /dev/null' if no_stdout
+      parts.push '2> /dev/null' if no_stderr
+      parts.join(' ')
     end
 
     # Run using system

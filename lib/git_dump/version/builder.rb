@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'git_dump/version'
 require 'git_dump/version/base'
 require 'git_dump/tree/builder'
