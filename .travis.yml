@@ -37,6 +37,10 @@ matrix:
       env: DRIVER=rugged
     - rvm: 'jruby-9.1.17.0'
       env: DRIVER=rugged
+    - rvm: 'jruby-9.2.7.0'
+      env: DRIVER=rugged
   allow_failures:
     - rvm: 'jruby-9.1.17.0'
+      env: DRIVER=git
+    - rvm: 'jruby-9.2.7.0'
       env: DRIVER=git
