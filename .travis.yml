@@ -5,9 +5,9 @@ rvm:
   - '1.9.3-p551'
   - '2.2.10'
   - '2.3.8'
-  - '2.4.7'
-  - '2.5.6'
-  - '2.6.4'
+  - '2.4.9'
+  - '2.5.7'
+  - '2.6.5'
   - 'jruby-9.1.17.0'
   - 'jruby-9.2.7.0'
 script: bundle exec rspec
@@ -21,16 +21,16 @@ env:
 matrix:
   include:
     - env: RUBOCOP=✓
-      rvm: '2.6.4'
+      rvm: '2.6.5'
       script: bundle exec rubocop
     - env: BENCHMARK=✓
-      rvm: '2.6.4'
+      rvm: '2.6.5'
       install: DRIVER=rugged bundle install --jobs=3 --retry=3
       script:
         - DRIVER=git bundle exec script/benchmark
         - DRIVER=rugged bundle exec script/benchmark
     - env: CHECK_RUBIES=✓
-      rvm: '2.6.4'
+      rvm: '2.6.5'
       script: bundle exec travis_check_rubies
   exclude:
     - rvm: '1.9.3-p551'
