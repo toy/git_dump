@@ -30,7 +30,7 @@ Layout/SpaceInsideHashLiteralBraces:
 Lint/NestedPercentLiteral:
   Enabled: false
 
-Lint/UnneededSplatExpansion:
+Lint/RedundantSplatExpansion:
   Enabled: false
 
 Metrics/AbcSize:
