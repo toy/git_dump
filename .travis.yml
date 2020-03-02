@@ -21,16 +21,16 @@ env:
   - DRIVER=rugged
 matrix:
   include:
-    - env: RUBOCOP=✓
+    - env: RUBOCOP=1
       rvm: '2.6.5'
       script: bundle exec rubocop
-    - env: BENCHMARK=✓
+    - env: BENCHMARK=1
       rvm: '2.6.5'
       install: DRIVER=rugged bundle install --jobs=3 --retry=3
       script:
         - DRIVER=git bundle exec script/benchmark
         - DRIVER=rugged bundle exec script/benchmark
-    - env: CHECK_RUBIES=✓
+    - env: CHECK_RUBIES=1
       rvm: '2.6.5'
       script: bundle exec travis_check_rubies
   exclude:
