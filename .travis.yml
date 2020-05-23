@@ -14,7 +14,7 @@ rvm:
 script: bundle exec rspec
 before_install:
   - gem install rubygems-update || gem install rubygems-update --version '< 3'
-  - gem update --system
+  - update_rubygems
   - gem install bundler || gem install bundler --version '< 2'
 env:
   - DRIVER=git
