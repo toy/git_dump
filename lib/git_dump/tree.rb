@@ -10,6 +10,7 @@ class GitDump
     include Base
 
     attr_reader :sha
+
     def initialize(repo, dir, name, sha)
       super(repo, dir, name)
       @sha = sha

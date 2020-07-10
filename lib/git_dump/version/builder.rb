@@ -11,6 +11,7 @@ class GitDump
       include Base
 
       attr_reader :repo
+
       def initialize(repo)
         fail ArgumentError, 'Expected Repo' unless repo.is_a?(Repo)
 

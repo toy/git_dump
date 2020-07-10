@@ -25,6 +25,7 @@ class GitDump
 
     attr_reader :repo, :id, :sha, :time
     attr_reader :commit_time, :annotation, :description
+
     def initialize(repo, id, sha, attributes = {})
       fail ArgumentError, 'Expected Repo' unless repo.is_a?(Repo)
 
