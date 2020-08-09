@@ -11,6 +11,7 @@ class GitDump
       class InitException < StandardError; end
 
       def self.included(base)
+        super
         base.extend(ClassMethods)
       end
 

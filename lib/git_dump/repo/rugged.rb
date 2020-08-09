@@ -10,6 +10,7 @@ class GitDump
       include Git
 
       def self.included(base)
+        super
         base.extend(ClassMethods)
       end
 
