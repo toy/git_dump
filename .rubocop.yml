@@ -60,6 +60,9 @@ Style/AccessorGrouping:
 Style/Alias:
   EnforcedStyle: prefer_alias_method
 
+Style/CombinableLoops:
+  Exclude: ['spec/**/*.rb']
+
 Style/DoubleNegation:
   Enabled: false
 
