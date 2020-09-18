@@ -13,7 +13,7 @@ describe GitDump do
   end
   let(:tmp_dir){ @tmp_dir }
 
-  DATAS = {
+  content = {
     :text => "\r\n\r\nline\nline\rline\r\nline\n\rline\r\n\r\n",
     :binary => 256.times.sort_by{ rand }.pack('C*'),
   }.freeze
@@ -136,7 +136,7 @@ describe GitDump do
     end
 
     it 'sets and reads version annotation' do
-      message = DATAS[:text] + File.read(__FILE__)
+      message = content[:text] + File.read(__FILE__)
 
       builder = dump.new_version
       built = builder.commit(:annotation => message)
@@ -146,7 +146,7 @@ describe GitDump do
     end
 
     it 'sets and reads version description' do
-      message = DATAS[:text] + File.read(__FILE__)
+      message = content[:text] + File.read(__FILE__)
 
       builder = dump.new_version
       built = builder.commit(:description => message)
@@ -209,7 +209,7 @@ describe GitDump do
         '',
         '1',
         '᚛᚛ᚉᚑᚅᚔᚉᚉᚔᚋ ᚔᚈᚔ ᚍᚂᚐᚅᚑ ᚅᚔᚋᚌᚓᚅᚐ᚜',
-      ] + DATAS.values
+      ] + content.values
 
       builder = dump.new_version
       datas.each_with_index do |data, i|
@@ -260,7 +260,7 @@ describe GitDump do
       expect(version['b'].each.map(&:path)).to match_array(%w[b/b])
     end
 
-    DATAS.each do |type, data|
+    content.each do |type, data|
       it "does not change #{type} data" do
         builder = dump.new_version
         builder['a'] = data
@@ -331,7 +331,7 @@ describe GitDump do
     end
 
     describe :write_to do
-      DATAS.each do |type, data|
+      content.each do |type, data|
         it "writes back #{type} data" do
           builder = dump.new_version
           builder['a'] = data
