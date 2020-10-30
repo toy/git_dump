@@ -54,7 +54,7 @@ describe GitDump do
     end
 
     it 'raises if path is a file' do
-      File.open(path, 'w'){}
+      File.open(path, 'w').close
       expect{ GitDump.new path }.to raise_error GitDump::Repo::InitException
     end
 
