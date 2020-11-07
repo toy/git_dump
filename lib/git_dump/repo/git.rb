@@ -316,7 +316,7 @@ class GitDump
           fail InitException, "#{path} does not exist and got no :create option"
         end
 
-        bare_arg = options[:create] != :non_bare ? '--bare' : '--no-bare'
+        bare_arg = options[:create] == :non_bare ? '--no-bare' : '--bare'
         begin
           Cmd.git('init', '-q', bare_arg, path, :no_stderr => true).run
         rescue Cmd::Failure => e
