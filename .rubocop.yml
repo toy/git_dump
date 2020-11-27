@@ -98,6 +98,9 @@ Style/PercentLiteralDelimiters:
     '%w': '[]'
     '%W': '[]'
 
+Style/RedundantArgument:
+  Enabled: false
+
 Style/SafeNavigation:
   Enabled: false
 
