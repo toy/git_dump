@@ -1,5 +1,5 @@
 [![Gem Version](https://img.shields.io/gem/v/git_dump.svg?style=flat)](https://rubygems.org/gems/git_dump)
-[![Build Status](https://img.shields.io/travis/toy/git_dump/master.svg?style=flat)](https://travis-ci.org/toy/git_dump)
+[![Build Status](https://img.shields.io/github/workflow/status/toy/git_dump/check/master?logo=github)](https://github.com/toy/git_dump/actions/workflows/check.yml)
 [![Code Climate](https://img.shields.io/codeclimate/maintainability/toy/git_dump.svg?style=flat)](https://codeclimate.com/github/toy/git_dump)
 [![Depfu](https://badges.depfu.com/badges/d6fc5f97912d1efe42933171f333ff16/overview.svg)](https://depfu.com/github/toy/git_dump)
 [![Inch CI](https://inch-ci.org/github/toy/git_dump.svg?branch=master&style=flat)](https://inch-ci.org/github/toy/git_dump)
