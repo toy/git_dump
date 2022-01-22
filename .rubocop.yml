@@ -70,6 +70,12 @@ Style/DoubleNegation:
 Style/Encoding:
   Enabled: false
 
+Style/FileRead:
+  Enabled: false
+
+Style/FileWrite:
+  Enabled: false
+
 Style/FormatStringToken:
   Enabled: false
 
