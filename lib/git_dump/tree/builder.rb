@@ -10,7 +10,7 @@ class GitDump
       include Base
 
       def initialize(repo, dir, name)
-        super(repo, dir, name)
+        super
         @entries = {}
       end
 

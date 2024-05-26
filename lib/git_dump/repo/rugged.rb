@@ -57,7 +57,7 @@ class GitDump
       # If io is specified, then content will be written to io
       def blob_read(sha, io = nil)
         if io
-          super(sha, io)
+          super
         else
           ::Rugged::Object.new(repo, sha).content
         end
