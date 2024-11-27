@@ -125,9 +125,9 @@ class GitDump
 
       options = {}
       options[:chdir] = chdir if chdir
-      options[:in] = '/dev/null' if no_stdin
-      options[:out] = '/dev/null' if no_stdout
-      options[:err] = '/dev/null' if no_stderr
+      options[:in] = File::NULL if no_stdin
+      options[:out] = File::NULL if no_stdout
+      options[:err] = File::NULL if no_stderr
       [env || {}] + args + [options]
     end
   end
