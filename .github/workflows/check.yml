@@ -20,15 +20,15 @@ jobs:
         - '3.2'
         - '3.3'
         - '3.4'
-        - jruby-9.3
         - jruby-9.4
+        - jruby-10.0
         driver:
         - git
         - rugged
         exclude:
-          - ruby: jruby-9.3
-            driver: rugged
           - ruby: jruby-9.4
+            driver: rugged
+          - ruby: jruby-10.0
             driver: rugged
       fail-fast: false
     steps:
