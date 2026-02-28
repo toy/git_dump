@@ -54,7 +54,7 @@ describe GitDump do
     end
 
     it 'raises if path is a file' do
-      File.open(path, 'w').close
+      File.open(path, 'w'){ nil }
       expect{ GitDump.new path }.to raise_error GitDump::Repo::InitException
     end
 
@@ -159,7 +159,9 @@ describe GitDump do
       builder = dump.new_version
       builder['string/x'] = 'test a'
       builder.store('stringio/x', StringIO.new('test b'), 0o644)
-      builder.store('io/x', File.open(__FILE__), 0o755)
+      File.open(__FILE__) do |io|
+        builder.store('io/x', io, 0o755)
+      end
       builder.store_from('path/x', __FILE__)
       built = builder.commit
 

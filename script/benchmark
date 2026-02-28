@@ -26,7 +26,7 @@ end
 
 puts "Using #{defined?(Rugged) ? 'libgit2' : 'git commands'}:"
 
-urandom = File.open('/dev/urandom')
+urandom = File.new('/dev/urandom')
 
 Dir.mktmpdir do |dir|
   dump = measure 'init' do
